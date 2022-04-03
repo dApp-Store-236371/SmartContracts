@@ -1,4 +1,4 @@
-pragma solidity ^0.4.22;
+pragma solidity ^0.8.13;
 
 contract HelloWorld {
     string public message;
@@ -7,11 +7,7 @@ contract HelloWorld {
         message = "first";
     }
 
-    function setMessage(string newMessage) public {
+    function setMessage(string memory newMessage) public {
         message = newMessage;
-    }
-
-    function remove() public {
-        selfdestruct(0x0);
     }
 }
