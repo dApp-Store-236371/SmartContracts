@@ -1,3 +1,5 @@
+var HDWalletProvider = require("truffle-hdwallet-provider");
+const mnemonic = "modify crunch dash doctor video castle diamond stool duck error salute half"
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -41,6 +43,15 @@ module.exports = {
       gas: 5000000,
       network_id: "*",
     },
+    rinkeby: {
+      provider: function() { 
+       return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/a60d419a449b4824b2f85876daf4d009");
+      },
+      network_id: 4,
+      gas: 4500000,
+      gasPrice: 10000000000,
+  }
+ 
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
     // You should run a client (like ganache-cli, geth or parity) in a separate terminal
