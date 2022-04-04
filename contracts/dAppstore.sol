@@ -82,15 +82,17 @@ contract dAppStore {
                 apps[id].price = price;
             }
 
-    function getApps(uint from, uint to) public view returns (App[] memory res, uint totalNumOfApps){
-        require(from > 0 && to > 0 && to < apps.length, "Invalid Range");
+    function getApps(uint from, uint to) public view returns (App[] memory result, uint totalNumOfApps){
+        require(from > 0 && to > 0 && to < apps.length && from < to, "Invalid Range");
+
+        result =  new App[](to-from);
 
         uint counter = 0;
         for(uint i = from; i < to; i++){
             //Populates res, while removing magnet links if not bought
-            res[counter] = (apps[i]);
+            result[counter] = apps[i];
             if(!appBoughtMapping[i][msg.sender]){
-                res[counter].magnetLink = "";
+                result[counter].magnetLink = "";
             }
             counter++;
         }
