@@ -13,7 +13,13 @@ contract dAppStore {
         string company;
         int  rating; //-1 means not rated
         uint price; //in wei
+        uint RatingsNum;
+
+        bool owned; //will be filled by getter functions.
+        int myRating;
     }
+
+    
 
    modifier onlyCreator(uint id) {
         require(appPublishedMapping[id][msg.sender] == true, "Caller is not the app's creator.");
@@ -23,6 +29,11 @@ contract dAppStore {
     modifier onlyPurchaser(uint id) {
         require(appBoughtMapping[id][msg.sender] == true, "Caller has not purchased the app.");
         _;
+    }
+
+    constructor() {
+        App memory app;
+        apps.push(app);//We want to use 1-based indexing because mappings return zero when it doesn't exist.
     }
 
     App[] public apps; //index is the 'id' of the app. Index zero must not be used!
@@ -36,7 +47,7 @@ contract dAppStore {
     mapping (address => uint[]) public purchasedListMapping;// address of buyer => indexes of purchased apps
     mapping (address => uint[]) public publishedListMapping; //address of seller => indexes of published apps
 
-    mapping (address => mapping( uint => uint)) public personalRatings; //adress of buyer => id of app => rating.
+    mapping (address => mapping( uint => int)) public personalRatings; //adress of buyer => id of app => rating.
                                                                   // Not in App struct because structs with nested mapping must use storage.
         function upload(string memory _name, string memory _description, string memory _fileSha256,
             string memory _imgUrl, string memory _magnetLink, string memory _company, uint _price) public { 
@@ -57,15 +68,25 @@ contract dAppStore {
                 company: _company,
                 price: _price,
                 rating: -1,
-                creator: msg.sender                     
+                creator: msg.sender,
+                owned: false,
+                myRating: -1,
+                RatingsNum: 0               
             });
 
+        //Store mapping about the uploader
         publishedListMapping[msg.sender].push(app.id);
         appPublishedMapping[app.id][msg.sender] = true;
+
+        //Uploader owns his own app
+        appBoughtMapping[app.id][msg.sender] = true;
+        purchasedListMapping[msg.sender].push(app.id);
+        personalRatings[msg.sender][app.id] = -1; //not rated
 
         apps.push(app);
         apps[index].fileSha256.push(_fileSha256);
         ratingOrderedApps.push(app.id);
+
     }
 
     function update(uint id, string calldata description, string calldata fileSha256,
@@ -82,21 +103,34 @@ contract dAppStore {
                 apps[id].price = price;
             }
 
-    function getApps(uint from, uint to) public view returns (App[] memory result, uint totalNumOfApps){
-        require(from > 0 && to > 0 && to < apps.length && from < to, "Invalid Range");
+    function min(uint256 a, uint256 b) private pure returns (uint256) {
+        return a >= b ? b : a;
+    }
 
+    function getApps(uint from, uint to) public view returns (App[] memory result, uint totalNumOfApps){
+
+        require(from > 0 && from < to, "Invalid Range");
+        to = min(to, apps.length);
         result =  new App[](to-from);
+
 
         uint counter = 0;
         for(uint i = from; i < to; i++){
             //Populates res, while removing magnet links if not bought
             result[counter] = apps[i];
+
+            result[counter].myRating = personalRatings[msg.sender][i];
             if(!appBoughtMapping[i][msg.sender]){
                 result[counter].magnetLink = "";
+                //owned is false by default
+            }
+            else{
+                result[counter].owned = true;
             }
             counter++;
         }
         
+
         totalNumOfApps = apps.length;
     }
 
