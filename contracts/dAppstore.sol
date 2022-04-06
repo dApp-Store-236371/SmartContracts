@@ -107,12 +107,14 @@ contract dAppStore {
         return a >= b ? b : a;
     }
 
+    //Returns apps from given index to given index, with download data to users who purchased the app.
+    //TODO: filtering. maybe.
     function getApps(uint from, uint to) public view returns (App[] memory result, uint totalNumOfApps){
+        
 
         require(from > 0 && from < to, "Invalid Range");
         to = min(to, apps.length);
         result =  new App[](to-from);
-
 
         uint counter = 0;
         for(uint i = from; i < to; i++){
@@ -132,6 +134,28 @@ contract dAppStore {
         
 
         totalNumOfApps = apps.length;
+    }
+
+    //returns apps purchased by the sender.
+    function getPurchasedApps(address owner) public view returns (App[] memory purchasedApps){
+        uint[] memory purchasedAppsIndexes = purchasedListMapping[owner];
+        purchasedApps =  new App[](purchasedAppsIndexes.length);
+        uint counter = 0;
+        for(uint i=0; i < purchasedApps.length; i++){
+            purchasedApps[counter] = apps[purchasedAppsIndexes[i]];
+            counter++;
+        }
+    }
+
+    //returns apps published by the sender.
+    function getPublishedApps(address publisher) public view returns (App[] memory publishedApps){
+        uint[] memory publishedAppsIndexes = publishedListMapping[publisher];
+        publishedApps = new App[](publishedAppsIndexes.length);
+        uint counter = 0;
+        for(uint i=0; i < publishedAppsIndexes.length; i++){
+            publishedApps[counter] = apps[publishedAppsIndexes[i]];
+            counter++;
+        }
     }
 
 }
