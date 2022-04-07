@@ -6,7 +6,7 @@ contract dAppStore {
         uint256  id;
         string  name;
         string  description;
-        address  creator;
+        address payable  creator;
         string[]  fileSha256; //last is SHA of latest version.
         string magnetLink;
         string imgUrl;
@@ -31,6 +31,11 @@ contract dAppStore {
         _;
     }
 
+    modifier onlyNotPurchaser(uint id) {
+        require(appBoughtMapping[id][msg.sender] == false, "Caller has already purchased the app.");
+        _;
+    }
+
     constructor() {
         App memory app;
         apps.push(app);//We want to use 1-based indexing because mappings return zero when it doesn't exist.
@@ -49,7 +54,7 @@ contract dAppStore {
 
     mapping (address => mapping( uint => int)) public personalRatings; //adress of buyer => id of app => rating.
                                                                   // Not in App struct because structs with nested mapping must use storage.
-        function upload(string memory _name, string memory _description, string memory _fileSha256,
+    function upload(string memory _name, string memory _description, string memory _fileSha256,
             string memory _imgUrl, string memory _magnetLink, string memory _company, uint _price) public { 
     
         require(bytes(_description).length <= 256, "Description must be at most 256 characters long");
@@ -68,7 +73,7 @@ contract dAppStore {
                 company: _company,
                 price: _price,
                 rating: -1,
-                creator: msg.sender,
+                creator: payable(msg.sender),
                 owned: false,
                 myRating: -1,
                 RatingsNum: 0               
@@ -88,6 +93,20 @@ contract dAppStore {
         ratingOrderedApps.push(app.id);
 
     }
+
+    function purchase(uint id) public payable onlyNotPurchaser(id)  { 
+        require(id > 0 && id < apps.length);
+        App memory app = apps[id];
+        require(app.price == msg.value, "Not enough/too much ether sent");
+        (bool sent,) = app.creator.call{value: msg.value}(""); //sends ether to the creator
+        require(sent, "Failed to send Ether");
+        
+        
+        appBoughtMapping[id][msg.sender] = true;
+        purchasedListMapping[msg.sender].push(id);
+        personalRatings[msg.sender][id] = -1; //not rated
+
+    } 
 
     function update(uint id, string calldata description, string calldata fileSha256,
             string calldata imgUrl, string calldata magnetLink, uint price) public onlyCreator(id) {
@@ -109,7 +128,7 @@ contract dAppStore {
 
     //Returns apps from given index to given index, with download data to users who purchased the app.
     //TODO: filtering. maybe.
-    function getApps(uint from, uint to) public view returns (App[] memory result, uint totalNumOfApps){
+    function getApps(uint from, uint to, address fetcher) public view returns (App[] memory result, uint totalNumOfApps){
         
 
         require(from > 0 && from < to, "Invalid Range");
@@ -121,8 +140,8 @@ contract dAppStore {
             //Populates res, while removing magnet links if not bought
             result[counter] = apps[i];
 
-            result[counter].myRating = personalRatings[msg.sender][i];
-            if(!appBoughtMapping[i][msg.sender]){
+            result[counter].myRating = personalRatings[fetcher][i];
+            if(!appBoughtMapping[i][fetcher]){
                 result[counter].magnetLink = "";
                 //owned is false by default
             }
@@ -143,6 +162,7 @@ contract dAppStore {
         uint counter = 0;
         for(uint i=0; i < purchasedApps.length; i++){
             purchasedApps[counter] = apps[purchasedAppsIndexes[i]];
+              purchasedApps[counter].owned = true;
             counter++;
         }
     }
@@ -154,6 +174,7 @@ contract dAppStore {
         uint counter = 0;
         for(uint i=0; i < publishedAppsIndexes.length; i++){
             publishedApps[counter] = apps[publishedAppsIndexes[i]];
+             publishedApps[counter].owned = true;
             counter++;
         }
     }
