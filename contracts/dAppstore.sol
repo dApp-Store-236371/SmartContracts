@@ -99,8 +99,7 @@ contract dAppStore {
 
     }
 
-    function purchase(uint id) public payable onlyNotPurchaser(id)  { 
-        require(id > 0 && id < apps.length);
+    function purchase(uint id) public payable onlyNotPurchaser(id)  appExists(id){ 
         App memory app = apps[id];
         require(app.price == msg.value, "Not enough/too much ether sent");
         (bool sent,) = app.creator.call{value: msg.value}(""); //sends ether to the creator
@@ -114,10 +113,9 @@ contract dAppStore {
     } 
 
     function update(uint id, string calldata description, string calldata fileSha256,
-            string calldata imgUrl, string calldata magnetLink, uint price) public onlyCreator(id) {
+            string calldata imgUrl, string calldata magnetLink, uint price) public onlyCreator(id) appExists(id) {
                 
                 require(bytes(description).length <= 256, "Description must be at most 256 characters long");
-                require(id < apps.length, "No app with this ID exists.");
                 require(price > 0, "No free apps allowed"); //TODO: Implement as a feature?
 
                 apps[id].description = description;
@@ -184,13 +182,11 @@ contract dAppStore {
         }
     }
 
-    function getMagnetLink(uint appId) public view returns (string memory){
-        require(appId > 0 && appId < apps.length);
+    function getMagnetLink(uint appId) public appExists(appId) view returns (string memory){
         return apps[appId].magnetLink;
     }
 
-    function setMagnetLink(uint appId, string memory magnetLink) public {
-        require(appId > 0 && appId < apps.length);
+    function setMagnetLink(uint appId, string memory magnetLink) public appExists(appId) {
         apps[appId].magnetLink = magnetLink;
     }
 
