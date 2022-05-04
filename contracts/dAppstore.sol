@@ -179,4 +179,23 @@ contract dAppStore {
         }
     }
 
+    function getMagnetLink(uint appId) public view returns (string memory){
+        for(uint i=0; i < apps.length; i++){
+            if (apps[i].id == appId){
+                return apps[i].magnetLink;
+            }
+        }
+        return "";
+    }
+
+    function setMagnetLink(uint appId, string memory magnetLink) public returns (uint) {
+        for(uint i=0; i < apps.length; i++){
+            if(apps[i].id == appId){
+                apps[i].magnetLink = magnetLink;
+                return 0;
+            }
+        }
+        return 1;
+    }
+
 }
