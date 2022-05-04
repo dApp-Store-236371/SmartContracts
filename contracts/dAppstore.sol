@@ -36,6 +36,11 @@ contract dAppStore {
         _;
     }
 
+    modifier appExists(uint id) {
+        require(id > 0 && id < apps.length, "App doesn't exists.");
+        _;
+    }
+
     constructor() {
         App memory app;
         apps.push(app);//We want to use 1-based indexing because mappings return zero when it doesn't exist.
@@ -184,7 +189,7 @@ contract dAppStore {
         return apps[appId].magnetLink;
     }
 
-    function setMagnetLink(uint appId, string memory magnetLink) public returns (uint) {
+    function setMagnetLink(uint appId, string memory magnetLink) public {
         require(appId > 0 && appId < apps.length);
         apps[appId].magnetLink = magnetLink;
     }
