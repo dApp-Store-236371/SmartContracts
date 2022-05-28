@@ -18,15 +18,21 @@ contract App {
     uint RatingsNum;
 
     constructor(uint256 _id, string memory _name, string memory _description,
-            string memory _magnetLink, string memory _imgUrl,
-            string memory _company, uint _price, string memory _fileSha256){
+                string memory _magnetLink, string memory _imgUrl,
+                string memory _company, uint _price, string memory _fileSha256)
+                validateID(_id) validatePrice(_price) validateString(_name)
+                validateString(_magnetLink) validateString(_fileSha256){
     id  = _id;
     name  = _name;
     description = _description;
     creator = payable(msg.sender);
     fileSha256[0] = _fileSha256;
     magnetLink = _magnetLink;
-    imgUrl = _imgUrl;
+    if (check_if_string_empty(_imgUrl)){
+        imgUrl = dappstore_utils.DEFAULT_APP_IMAGE;
+    } else{
+        imgUrl = _imgUrl;
+    }
     company = _company;
     rating = dappstore_utils.UNRATED;
     price = _price;
@@ -35,28 +41,32 @@ contract App {
     // myRating = _myRating;
     }
 
-
-    modifier validatePrice(uint _price){
-        require(_price > 0);
+    modifier validateID(uint _id){
+        require(_id > 0, 'Illegal app id');
         _;
     }
 
-    modifier validateString(string calldata _string){
+    modifier validatePrice(uint _price){
+        require(_price > 0, 'Price must be greater than 0');
+        _;
+    }
+
+    modifier validateString(string memory _string){
         require(check_if_string_empty(_string));
         _;
     }
 
     modifier validateOwner(){
-        require(msg.sender == creator);
+        require(msg.sender == creator, 'Sender is not app owner');
         _;
     }
 
-    function check_if_string_empty(string calldata _string)
+    function check_if_string_empty(string memory _string)
     pure private returns(bool){
         return bytes(_string).length > 0;
     }
 
-    function update_app_version(string calldata new_sha)
+    function update_app_version(string memory new_sha)
     public validateOwner validateString(new_sha) {
         fileSha256.push(new_sha);
     }
