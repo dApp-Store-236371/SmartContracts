@@ -1,4 +1,4 @@
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.8.0;
 import {dappstore_utils} from './dappstore_utils.sol'; //import
 
 contract App {
@@ -13,12 +13,27 @@ contract App {
     string magnetLink;
     string imgUrl;
     string company;
-    int  rating; //-1 means not rated
+    uint  rating; //0 means not rated
     uint price; //in wei
     uint RatingsNum;
 
-    // bool owned; //will be filled by getter functions.
-
+    constructor(uint256 _id, string memory _name, string memory _description,
+            string memory _magnetLink, string memory _imgUrl,
+            string memory _company, uint _price, string memory _fileSha256){
+    id  = _id;
+    name  = _name;
+    description = _description;
+    creator = payable(msg.sender);
+    fileSha256[0] = _fileSha256;
+    magnetLink = _magnetLink;
+    imgUrl = _imgUrl;
+    company = _company;
+    rating = dappstore_utils.UNRATED;
+    price = _price;
+    RatingsNum = 0;
+    // owned = _owned;
+    // myRating = _myRating;
+    }
 
 
     modifier validatePrice(uint _price){
@@ -83,46 +98,30 @@ contract App {
         return fileSha256[fileSha256.length - 1];
     }
 
-    function get_app_rating() external view returns (int){
+    function get_app_rating() external view returns (uint){
         if (rating < 0){
             return 0;
         }
         return rating;
     }
 
-    function rate_app(int new_rating, bool first_rating, int old_rating) external {
+    function rate_app(uint new_rating, bool first_rating, uint old_rating) external {
         require(new_rating > 0 && new_rating <=5, "illegal rating");
         if (new_rating == dappstore_utils.UNRATED){
             require(first_rating == true, "App has no previous ratings");
             rating = new_rating;
         } else if (first_rating == true){
-            rating = (rating * int(RatingsNum) + new_rating) / int(RatingsNum + 1);
+            rating = (rating * RatingsNum + new_rating) / RatingsNum + 1;
             RatingsNum = RatingsNum + 1;
         } else {
             require(old_rating > 0 && old_rating <=5, "illegal rating");
-            int rating_mid = (rating * int(RatingsNum) - old_rating) ;
-            rating = (rating_mid + new_rating) / int(RatingsNum);
+            uint rating_mid = rating * RatingsNum - old_rating ;
+            rating = (rating_mid + new_rating) / RatingsNum;
         }
     }
 
 
-    constructor(uint256 _id, string memory _name, string memory _description,
-                string memory _magnetLink, string memory _imgUrl,
-                string memory _company, uint _price, string memory _fileSha256){
-        id  = _id;
-        name  = _name;
-        description = _description;
-        creator = payable(msg.sender);
-        fileSha256[0] = _fileSha256;
-        magnetLink = _magnetLink;
-        imgUrl = _imgUrl;
-        company = _company;
-        rating = dappstore_utils.UNRATED;
-        price = _price;
-        RatingsNum = 0;
-        // owned = _owned;
-//        myRating = _myRating;
-    }
+
 
 
 
