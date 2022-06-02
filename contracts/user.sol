@@ -27,6 +27,8 @@ contract User {
         is_publisher = false;
     }
 
+
+    //Validation
     modifier validateOwner() {
         require(owner == msg.sender);
         _;
@@ -55,24 +57,29 @@ contract User {
     //
     // }
 
+    //Getters
+    function get_purchased_apps() view external validateOwner returns(uint[] memory){
+        return purchased_apps;
+    }
+
+    function get_created_apps() view external validateOwner returns(uint[] memory){
+        return created_apps;
+    }
+
+    function get_rated_apps() view external validateOwner returns(uint[] memory){
+        return rated_apps;
+    }
+
+    //Updaters
+    function purchase_app(uint _app_id) external validateOwner validateID(_app_id){
+        purchased_apps.push(_app_id);
+    }
+
     function rate_app(uint _app_id, uint _app_rating) external validateOwner validateID(_app_id){
         rated_apps.push(_app_id);
         app_ratings[_app_id] = _app_rating;
     }
 
-    function purchase_app(uint _app_id) external validateOwner validateID(_app_id){
-        purchased_apps.push(_app_id);
-    }
-
-    //show my apps?
-    function get_purchased_apps() view external validateOwner returns(uint[] memory){
-        return purchased_apps;
-    }
-
-    //for search by creator
-    function get_created_apps() view external validateOwner returns(uint[] memory){
-        return created_apps;
-    }
 
 
 }

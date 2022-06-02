@@ -1,9 +1,17 @@
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.8.0;
 
 library dappstore_utils {
-    string constant DEFAULT_APP_NAME = '';
-    string constant DEFAULT_DESCRIPTION_NAME = '';
     string constant DEFAULT_EMPTY = '';
-    int constant UNRATED = -1;
+    uint constant UNRATED = 0;
+    string constant DEFAULT_APP_IMAGE = '';
+    uint constant RATING_THRESHHOLD = 0;
+
+
+    event UpdatedContent(
+        string indexed content_type,
+        string indexed previous_content,
+        string indexed new_content,
+        address sender
+    );
 }
 
