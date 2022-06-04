@@ -1,7 +1,8 @@
 pragma solidity ^0.8.0;
+import {App} from './app.sol';
+import {constants, events, string_utils } from './dappstore_utils.sol';
 
 contract User {
-    //App contract provides a data structure of auser and
 
     address payable user_address;
     address dapp_store;
@@ -33,20 +34,20 @@ contract User {
         _;
     }
 
-    function add_created_app(address app) external{
+    function addCreatedApp(address app) external{
         created_apps.push(app);
     }
 
     //Getters
-    function get_purchased_apps() view external validateDappStore returns(address[] memory){
+    function getPurchasedApps() view external validateDappStore returns(address[] memory){
         return purchased_apps;
     }
 
-    function get_created_apps() view external validateDappStore returns(address[] memory){
+    function getCreatedApps() view external validateDappStore returns(address[] memory){
         return created_apps;
     }
 
-    function get_rated_apps() view external validateDappStore returns(address[] memory){
+    function getRatedApps() view external validateDappStore returns(address[] memory){
         address[] memory rated_apps;
         for(uint i; i < purchased_apps.length; i++){
             address app = purchased_apps[i];
@@ -62,17 +63,26 @@ contract User {
     }
 
     //Updaters
-    function purchase_app(address app) external validateDappStore{
-        purchased_apps.push(app);
-    }
-
     function creatApp(address app) external validateDappStore{
         is_publisher = true;
         created_apps.push(app);
     }
 
-    function rate_app(address app, uint app_rating) external validateDappStore{
+    function rateApp(address app, uint app_rating) external validateDappStore{
         require(app_rating >=1 && app_rating <=5);
         app_ratings[app] = app_rating;
     }
+
+    function purchaseApp(address app) external validateDappStore{
+        purchased_apps.push(app);
+        user = app.getCreator();
+        price = app.getPrice();
+        payCreator(user, price);
+    }
+
+    function payCreator(address creator, uint price) private payable validateDappStore{
+        creator.transfer(price);
+    }
 }
+
+
