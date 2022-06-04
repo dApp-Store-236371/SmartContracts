@@ -12,8 +12,7 @@ contract User {
 
 
     address payable private owner;
-    uint public user_id;
-    string user_name;
+    addres
     bool is_publisher;
     mapping(uint => uint) private app_ratings;
     uint[] rated_apps;
@@ -79,7 +78,6 @@ contract User {
         rated_apps.push(_app_id);
         app_ratings[_app_id] = _app_rating;
     }
-
 
 
 }
