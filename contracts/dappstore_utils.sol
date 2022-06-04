@@ -18,8 +18,14 @@ library events{
 
     event AppCreated(
         string indexed app_name,
-        string indexed app_id,
-        string indexed creatore_id,
+        uint indexed app_id,
+        address payable indexed creator,
+        address sender
+    );
+
+    event UserCreated(
+        address payable indexed user_address,
+        address indexed user_contract,
         address sender
     );
 }

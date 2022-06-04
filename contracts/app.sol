@@ -10,7 +10,7 @@ contract App {
     using string_utils for string;
     address dapp_store;
     uint256  id;
-    address creator;
+    address payable creator;
     string  name;
     string  description;
     string[]  fileSha256; //last is SHA of latest version.
@@ -23,7 +23,7 @@ contract App {
     uint num_ratings;
 
     constructor(uint _id,
-                address creator,
+                address payable creator,
                 string memory _name,
                 string memory _description,
                 string memory _magnetLink,
@@ -35,7 +35,7 @@ contract App {
                 validateString(_magnetLink) validateString(_fileSha256)
     {
     dapp_store = msg.sender;
-    creator = payable(creator);
+    creator = creator;
     id  = _id;
     name  = _name;
     description = _description;
@@ -51,7 +51,7 @@ contract App {
     price = _price;
     num_ratings = 0;
     fileSha256.push(_fileSha256);
-    // emit events.AppCreated(id, name, creator, dapp_store);
+    emit events.AppCreated(name, id, creator, dapp_store);
     }
 
     //valdiations
@@ -89,7 +89,7 @@ contract App {
         return name;
     }
 
-    function getCreator() external view returns(address memory){
+    function getCreator() external view returns(address payable){
         return creator;
     }
 
@@ -140,12 +140,16 @@ contract App {
         imgUrl = new_imgUrl;
     }
 
+    function updateAppMagnetLink(string calldata new_magnetLink) external validateDappStore validateString(new_magnetLink){
+        emit events.UpdatedContent('updated new_magnetLink', magnetLink, new_magnetLink, msg.sender);
+        magnetLink = new_magnetLink;
+    }
     function updateAppVersion(string memory new_sha) external validateDappStore validateString(new_sha) {
         emit events.UpdatedContent('updated sha', fileSha256[fileSha256.length - 1], new_sha, msg.sender);
         fileSha256.push(new_sha);
     }
 
-    function updateCompany(string calldata new_company) external validateDappStore validateString(new_company){
+    function updateAppCompany(string calldata new_company) external validateDappStore validateString(new_company){
         emit events.UpdatedContent('updated company', company, new_company, msg.sender);
         company = new_company;
     }
@@ -156,7 +160,12 @@ contract App {
     }
 
 
-    function rateApp(uint old_rating, uint new_rating) external
+    function updateAppFileSha(string calldata new_filesha) external validateDappStore validateString(new_filesha){
+        emit events.UpdatedContent('updated filesha', fileSha256[fileSha256.length - 1], new_filesha, msg.sender);
+        fileSha256.push(new_filesha);
+    }
+
+    function rateApp(uint old_rating, uint old_rating_modulu, uint new_rating) external
     validateDappStore validateRating(old_rating) validateRating(new_rating) returns(uint, uint){
         require(new_rating >= 1, 'Can\'t give 0 stars');
         uint total_rating = rating * num_ratings + rating_modulu;

@@ -12,10 +12,11 @@ contract User {
     mapping (address => uint) app_ratings;
     mapping (address => uint) downloaded_apps;
 
-    constructor(address new_user_address){
+    constructor(address payable new_user_address){
         dapp_store = msg.sender;
-        user_address = payable(new_user_address);
+        user_address = new_user_address;
         is_publisher = false;
+        emit events.UserCreated(new_user_address, address(this), dapp_store);
     }
 
     //Validation
@@ -73,14 +74,15 @@ contract User {
         app_ratings[app] = app_rating;
     }
 
-    function purchaseApp(address app) external validateDappStore{
-        purchased_apps.push(app);
-        user = app.getCreator();
-        price = app.getPrice();
+    function purchaseApp(address app_address) external validateDappStore{
+        purchased_apps.push(app_address);
+        App app = App(app_address);
+        address payable user = app.getCreator();
+        uint price = app.getPrice();
         payCreator(user, price);
     }
 
-    function payCreator(address creator, uint price) private payable validateDappStore{
+    function payCreator(address payable creator, uint price) public payable validateDappStore{
         creator.transfer(price);
     }
 }
