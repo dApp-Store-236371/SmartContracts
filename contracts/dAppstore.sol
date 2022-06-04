@@ -26,16 +26,14 @@ import {dappstore_utils} from './dappstore_utils.sol';
 
 
 contract dAppstore {
-    //dappstore will use App and User interfaces to manage data
-    //users and apps
-    // IApp[] apps;
-    // IUser[] users;
-    mapping(uint => address) users;
+    address payable user_address;
+    address dapp_store;
+    mapping(address => address) users;
     mapping(uint => address) apps;
     uint users_num;
     uint apps_num;
 
-    function create_new_app(string memory _name, string memory _description,
+    function create_new_app(address creator, string memory _name, string memory _description,
             string memory _magnetLink, string memory _imgUrl,
             string memory _company, uint _price, string memory _fileSha256) external{
         apps_num += 1;
@@ -49,12 +47,14 @@ contract dAppstore {
         address app = apps[app_id];
         // app.up
     }
-    // function purchase_app(){}
 
-    function create_new_user(string calldata user_name) external{
-        users_num += 1;
-        User new_user = new User(users_num, user_name);
-        users[users_num] = address(new_user);
+    fucntion create_new_user(address user_address){
+
+    }
+
+    function purchase_app(address app){
+        address user = msg.sender;
+
     }
 
     function rate_app(uint _app_id, uint _rating) external{
@@ -66,7 +66,6 @@ contract dAppstore {
         else if (curr_rating > dappstore_utils.RATING_THRESHHOLD){
             curr_app.rate_app(_rating, false, curr_app.get_app_rating());
         }
-
     }
 
     function change_buckets(App app, uint from, uint to) pure private returns(bool){
