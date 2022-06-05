@@ -1,26 +1,29 @@
 pragma solidity ^0.8.0;
 
-import {constants, events, string_utils } from './dappstore_utils.sol';
+import {Constants, Events, StringUtils} from './dappstore_utils.sol';
 
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract App {
+contract App is Ownable {
     //App contract provides a data structure of an app and
     //an API to work with for external use
-    using string_utils for string;
-    address dapp_store;
-    uint256  id;
-    address payable creator;
-    string  name;
-    string  description;
-    string[]  fileSha256; //last is SHA of latest version.
-    string magnetLink;
-    string imgUrl;
-    string company;
-    uint  rating; //0 means not rated
+    using StringUtils for string;
+    using Counters for Counters.Counter;
+    uint256 public  id;
+    address payable public creator;
+    string public name;
+    string public description;
+    string[] fileSha256; //last is SHA of latest version.
+    string public magnetLink;
+    string public imgUrl;
+    string public company;
+    uint rating_int; //0 means not rated
     uint rating_modulu;
-    uint price; //in wei
-    uint num_ratings;
+    uint public price; //in wei
+    Counters.Counter public num_ratings;
+    Counters.Counter public num_purchases;
 
     constructor(uint _id,
                 address payable creator,
@@ -34,7 +37,6 @@ contract App {
                 validateID(_id) validatePrice(_price) validateString(_name)
                 validateString(_magnetLink) validateString(_fileSha256)
     {
-    dapp_store = msg.sender;
     creator = creator;
     id  = _id;
     name  = _name;
@@ -43,15 +45,16 @@ contract App {
     magnetLink = _magnetLink;
     imgUrl = _imgUrl;
     if(_imgUrl.isEmpty()){
-        imgUrl = constants.DEFAULT_APP_IMAGE;
+        imgUrl = Constants.DEFAULT_APP_IMAGE;
     }
     company = _company;
-    rating = constants.UNRATED;
-    rating_modulu = constants.UNRATED;
+    rating_int = Constants.UNRATED;
+    rating_modulu = Constants.UNRATED;
     price = _price;
-    num_ratings = 0;
     fileSha256.push(_fileSha256);
-    emit events.AppCreated(name, id, creator, dapp_store);
+    num_ratings.reset();
+    num_purchases.reset();
+    emit Events.AppCreated(name, id, creator, owner());
     }
 
     //valdiations
@@ -75,108 +78,71 @@ contract App {
         _;
     }
 
-    modifier validateDappStore(){
-        require(msg.sender == dapp_store, 'Sender is not app owner');
-        _;
-    }
-
     //getters
-    function getID() external view returns(uint){
-        return id;
-    }
-
-    function getName() external view returns(string memory){
-        return name;
-    }
-
-    function getCreator() external view returns(address payable){
-        return creator;
-    }
-
-    function getDescription() external view returns(string memory){
-        return description;
-    }
-
-    function getImgUrl() external view returns(string memory){
-        return imgUrl;
-    }
-
-    function getCompany() external view returns(string memory){
-        return company;
-    }
-
-    function getPrice() external view returns(uint){
-        return price;
-    }
-
     function getCurrentVersion() external view returns(string memory){
         return fileSha256[fileSha256.length - 1];
     }
 
     function getAppRating() external view returns (uint, uint){
-        if (rating <= 0){
+        if (rating_int <= 0){
             return (0, 0);
         }
-    return (rating, rating_modulu);
-    }
-
-    function getNumRatings() external view returns(uint){
-        return num_ratings;
+    return (rating_int, rating_modulu);
     }
 
     //updaters
-    function updateAppName(string calldata new_name) external validateDappStore validateString(new_name){
-        emit events.UpdatedContent('updated name', name, new_name, msg.sender);
+    function updateAppName(string calldata new_name) external onlyOwner validateString(new_name){
+        emit Events.UpdatedContent('updated name', name, new_name, msg.sender);
         name = new_name;
     }
 
-    function updateAppDescription(string calldata new_description) external validateDappStore validateString(new_description){
-        emit events.UpdatedContent('updated description', description, new_description, msg.sender);
+    function updateAppDescription(string calldata new_description) external onlyOwner validateString(new_description){
+        emit Events.UpdatedContent('updated description', description, new_description, msg.sender);
         description = new_description;
     }
 
-    function updateAppImagUrl(string calldata new_imgUrl) external validateDappStore validateString(new_imgUrl){
-        emit events.UpdatedContent('updated imgUrl', imgUrl, new_imgUrl, msg.sender);
+    function updateAppImagUrl(string calldata new_imgUrl) external onlyOwner validateString(new_imgUrl){
+        emit Events.UpdatedContent('updated imgUrl', imgUrl, new_imgUrl, msg.sender);
         imgUrl = new_imgUrl;
     }
 
-    function updateAppMagnetLink(string calldata new_magnetLink) external validateDappStore validateString(new_magnetLink){
-        emit events.UpdatedContent('updated new_magnetLink', magnetLink, new_magnetLink, msg.sender);
+    function updateAppMagnetLink(string calldata new_magnetLink) external onlyOwner validateString(new_magnetLink){
+        emit Events.UpdatedContent('updated new_magnetLink', magnetLink, new_magnetLink, msg.sender);
         magnetLink = new_magnetLink;
     }
-    function updateAppVersion(string memory new_sha) external validateDappStore validateString(new_sha) {
-        emit events.UpdatedContent('updated sha', fileSha256[fileSha256.length - 1], new_sha, msg.sender);
+    function updateAppVersion(string memory new_sha) external onlyOwner validateString(new_sha) {
+        emit Events.UpdatedContent('updated sha', fileSha256[fileSha256.length - 1], new_sha, msg.sender);
         fileSha256.push(new_sha);
     }
 
-    function updateAppCompany(string calldata new_company) external validateDappStore validateString(new_company){
-        emit events.UpdatedContent('updated company', company, new_company, msg.sender);
+    function updateAppCompany(string calldata new_company) external onlyOwner validateString(new_company){
+        emit Events.UpdatedContent('updated company', company, new_company, msg.sender);
         company = new_company;
     }
 
-    function updateAppPrice(uint new_price) external validateDappStore validatePrice(new_price){
-        emit events.UpdatedContent('updated price', Strings.toString(price), Strings.toString(new_price), msg.sender);
+    function updateAppPrice(uint new_price) external onlyOwner validatePrice(new_price){
+        emit Events.UpdatedContent('updated price', Strings.toString(price), Strings.toString(new_price), msg.sender);
         price = new_price;
     }
 
 
-    function updateAppFileSha(string calldata new_filesha) external validateDappStore validateString(new_filesha){
-        emit events.UpdatedContent('updated filesha', fileSha256[fileSha256.length - 1], new_filesha, msg.sender);
+    function updateAppFileSha(string calldata new_filesha) external onlyOwner validateString(new_filesha){
+        emit Events.UpdatedContent('updated filesha', fileSha256[fileSha256.length - 1], new_filesha, msg.sender);
         fileSha256.push(new_filesha);
     }
 
     function rateApp(uint old_rating, uint old_rating_modulu, uint new_rating) external
-    validateDappStore validateRating(old_rating) validateRating(new_rating) returns(uint, uint){
+    onlyOwner validateRating(old_rating) validateRating(new_rating) returns(uint, uint){
         require(new_rating >= 1, 'Can\'t give 0 stars');
-        uint total_rating = rating * num_ratings + rating_modulu;
+        uint total_rating = rating_int * num_ratings.current() + rating_modulu;
         if (old_rating == 0){
-            num_ratings += 1;
+            num_ratings.increment();
         }
         //TODO: Make sure subtraction is validated (Maybe OpenZepplin?)
         total_rating += new_rating - old_rating;
-                rating = total_rating / num_ratings;
-        rating_modulu = total_rating % num_ratings;
-        return (rating, rating_modulu);
+        rating_int = total_rating / num_ratings.current();
+        rating_modulu = total_rating % num_ratings.current();
+        return (rating_int, rating_modulu);
         }
 
 }

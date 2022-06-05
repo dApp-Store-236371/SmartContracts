@@ -1,6 +1,6 @@
 pragma solidity ^0.8.0;
 
-library constants {
+library Constants {
     string constant DEFAULT_EMPTY = '';
     uint constant UNRATED = 0;
     string constant DEFAULT_APP_IMAGE = 'default image';
@@ -8,7 +8,7 @@ library constants {
 
 }
 
-library events{
+library Events {
     event UpdatedContent(
         string indexed content_type,
         string indexed previous_content,
@@ -28,12 +28,40 @@ library events{
         address indexed user_contract,
         address sender
     );
+
+    event UserPurchased(
+        address payable indexed app_creator,
+        address payable indexed buyer,
+        address indexed app_contract,
+        address dapp_store
+    );
+
 }
 
-library string_utils{
+library StringUtils {
     function isEmpty(string memory _string) pure external returns(bool){
         return bytes(_string).length == 0;
     }
 
 }
+
+library AddressUtils{
+    function isAddressZero(address _address) pure external returns(bool){
+        return _address == address(0);
+    }
+    function isAddressEqual(address _address1, address _address2) pure external returns(bool){
+        return _address1 == _address2;
+    }
+}
+
+library AddressPayableUtils{
+    function isAddressZero(address payable _address) pure external returns(bool){
+        return _address == payable(address(0));
+    }
+    function isAddressEqual(address payable _address1, address payable _address2) pure external returns(bool){
+        return _address1 == _address2;
+    }
+}
+
+
 
