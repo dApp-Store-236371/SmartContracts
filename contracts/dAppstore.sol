@@ -5,6 +5,7 @@ import {Constants, Events, StringUtils, AddressUtils} from './dappstore_utils.so
 
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 
 contract dAppstore {
     using AddressUtils for address;
@@ -113,6 +114,9 @@ contract dAppstore {
         if (users[user].isAddressZero()){
             createNewUser(payable(user));
         }
+        App _app = App(app);
+        uint price = _app.price();
+
         User(user).purchaseApp(app);
     }
 
@@ -159,6 +163,50 @@ contract dAppstore {
             false
         );
         return app_info;
+    }
+
+    // Not registered user is going to see empty list
+    function getPurchasedAppsInfo() view private returns(AppInfoLibrary.AppInfo[] memory){
+        if (users[msg.sender].isAddressZero()){
+            createNewUser(msg.sender);
+        }
+        User _user = User(users[msg.sender]);
+        uint[] memory purchased_apps = _user.getPurchasedApps();
+        uint len = purchased_apps.length();
+        AppInfoLibrary.AppInfo[] memory purchased_apps_info = new AppInfoLibrary.AppInfo[](len);
+        for (uint i = 0; i < len; i++){
+            purchased_apps_info[i] = getAppInfo(purchased_apps[i]);
+        }
+        return purchased_apps_info;
+    }
+
+    // Not registered user is going to see empty list
+    function getCreatedAppsInfo() view private returns(AppInfoLibrary.AppInfo[] memory){
+        if (users[msg.sender].isAddressZero()){
+            createNewUser(msg.sender);
+        }
+        User _user = User(users[msg.sender]);
+        uint[] memory created_apps = _user.getCreatedApps();
+        uint len = created_apps.length();
+        AppInfoLibrary.AppInfo[] memory created_apps_info = new AppInfoLibrary.AppInfo[](len);
+        for (uint i = 0; i < len; i++){
+            created_apps_info[i] = getAppInfo(created_apps[i]);
+        }
+        return created_apps_info;
+    }
+
+    function getRatedAppsInfo() view private returns(AppInfoLibrary.AppInfo[] memory){
+        if (users[msg.sender].isAddressZero()){
+            createNewUser(msg.sender);
+        }
+        User _user = User(users[msg.sender]);
+        uint[] memory rated_apps = _user.getRatedApps();
+        uint len = rated_apps.length();
+        AppInfoLibrary.AppInfo[] memory rated_apps_info = new AppInfoLibrary.AppInfo[](len);
+        for (uint i = 0; i < len; i++){
+            rated_apps_info[i] = getAppInfo(rated_apps[i]);
+        }
+        return rated_apps_info;
     }
 
 }

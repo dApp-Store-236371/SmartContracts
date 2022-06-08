@@ -145,6 +145,8 @@ contract App is Ownable {
         return (rating_int, rating_modulu);
         }
 
+
+
 }
 
 
