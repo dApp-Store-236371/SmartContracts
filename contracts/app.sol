@@ -1,6 +1,8 @@
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
 import {Constants, Events, StringUtils} from './dappstore_utils.sol';
+import {AppInfoLibrary} from './AppInfoLibrary.sol';
 
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -26,7 +28,7 @@ contract App is Ownable {
     Counters.Counter public num_purchases;
 
     constructor(uint _id,
-                address payable creator,
+                address _creator,
                 string memory _name,
                 string memory _description,
                 string memory _magnetLink,
@@ -37,7 +39,7 @@ contract App is Ownable {
                 validateID(_id) validatePrice(_price) validateString(_name)
                 validateString(_magnetLink) validateString(_fileSha256)
     {
-    creator = creator;
+    creator = payable(_creator);
     id  = _id;
     name  = _name;
     description = _description;
@@ -59,7 +61,7 @@ contract App is Ownable {
 
     //valdiations
     modifier validateID(uint _id){
-        require(_id > 0, 'Illegal app id');
+        require(_id >= 0, 'Illegal app id');
         _;
     }
 
@@ -79,7 +81,7 @@ contract App is Ownable {
     }
 
     //getters
-    function getCurrentVersion() external view returns(string memory){
+    function getCurrentVersion() public view returns(string memory){
         return fileSha256[fileSha256.length - 1];
     }
 
@@ -101,7 +103,7 @@ contract App is Ownable {
         description = new_description;
     }
 
-    function updateAppImagUrl(string calldata new_imgUrl) external onlyOwner validateString(new_imgUrl){
+    function updateAppImgUrl(string calldata new_imgUrl) external onlyOwner validateString(new_imgUrl){
         emit Events.UpdatedContent('updated imgUrl', imgUrl, new_imgUrl, msg.sender);
         imgUrl = new_imgUrl;
     }
@@ -131,21 +133,37 @@ contract App is Ownable {
         fileSha256.push(new_filesha);
     }
 
-    function rateApp(uint old_rating, uint old_rating_modulu, uint new_rating) external
-    onlyOwner validateRating(old_rating) validateRating(new_rating) returns(uint, uint){
-        require(new_rating >= 1, 'Can\'t give 0 stars');
-        uint total_rating = rating_int * num_ratings.current() + rating_modulu;
-        if (old_rating == 0){
-            num_ratings.increment();
-        }
-        //TODO: Make sure subtraction is validated (Maybe OpenZepplin?)
-        total_rating += new_rating - old_rating;
-        rating_int = total_rating / num_ratings.current();
-        rating_modulu = total_rating % num_ratings.current();
-        return (rating_int, rating_modulu);
-        }
+    // function rateApp(uint old_rating, uint old_rating_modulu, uint new_rating) external
+    // onlyOwner validateRating(old_rating) validateRating(new_rating) returns(uint, uint){
+    //     require(new_rating >= 1, 'Can\'t give 0 stars');
+    //     uint total_rating = rating_int * num_ratings.current() + rating_modulu;
+    //     if (old_rating == 0){
+    //         num_ratings.increment();
+    //     }
+    //     //TODO: Make sure subtraction is validated (Maybe OpenZepplin?)
+    //     total_rating += new_rating - old_rating;
+    //     rating_int = total_rating / num_ratings.current();
+    //     rating_modulu = total_rating % num_ratings.current();
+    //     return (rating_int, rating_modulu);
+    //     }
 
-
+    function getAppInfo() view external returns(AppInfoLibrary.AppInfo memory){
+        // (uint rating, uint rating_modulu) = _app.getAppRating();
+        AppInfoLibrary.AppInfo memory app_info = AppInfoLibrary.AppInfo(
+            id,
+            name,
+            description,
+            imgUrl,
+            company,
+            price,
+            num_ratings.current(),
+            rating_int,
+            rating_modulu,
+            getCurrentVersion(),
+            false
+        );
+        return app_info;
+    }
 
 }
 
