@@ -16,7 +16,7 @@ contract dAppstore {
     using AddressUtils for address payable;
     
     using Strings for uint;
-    using Address for address payable;
+    // using Address for address payable;
     using EnumerableMap for EnumerableMap.UintToAddressMap;
     using Counters for Counters.Counter;
     string constant public name = "dAppstore";
@@ -33,41 +33,45 @@ contract dAppstore {
 
     //Validators
     modifier userExists(address _user_address){
-        require(!_user_address.isAddressZero(), "User address is not valid");
-        require(!users[_user_address].isAddressZero(), 'User does not exist');
+        require(!_user_address.isAddressZero(), "Invalid addr");
+        require(!users[_user_address].isAddressZero(), 'User not found');
         _;
     }
 
     modifier userDoesNotExists(address _user_address){
-        require(!_user_address.isAddressZero(), "User address is not valid");
-        require(users[_user_address].isAddressZero(), 'User does not exist');
+        require(!_user_address.isAddressZero(), "Invalid addr");
+        require(users[_user_address].isAddressZero(), 'User not found');
         _;
     }
 
     modifier appAddressExists(address _app){
         uint _app_id = App(_app).id();
-        require(apps.contains(_app_id), 'App does not exist');
-        require(apps.get(_app_id).isAddressZero(), 'App already exists');
+        require(apps.contains(_app_id), 'App not found');
+        require(!apps.get(_app_id).isAddressZero(), 'App exists');
         _;
     }
 
     modifier appExists(uint _app_id){
-        require(apps.contains(_app_id), 'App does not exist');
-        require(apps.get(_app_id).isAddressZero(), 'App already exists');
+        require(apps.contains(_app_id), 'App not found');
+        require(!apps.get(_app_id).isAddressZero(), 'App doens\'t exists');
         _;
     }
 
     modifier onlyCreator(uint _app_id, address _app_creator){
-        require(!_app_creator.isAddressZero(), 'App creator address is not valid');
-        App _app = App(apps.get(_app_id));
-        require(_app_creator == _app.creator(), 'User is not the same as the app creator');
+        require(!_app_creator.isAddressZero(), 'Invalid addr');
+        require(_app_creator == App(apps.get(_app_id)).creator(), 'not creator addr');
         _;
     }
 
     modifier validIndex(uint _index, uint _length){
-        require(apps.contains(_index), 'Index is not valid');
-        require(_length <= apps.length(), 'Length is not valid');
+        require(apps.contains(_index), 'Invalid index');
+        require(_length > 0, 'Invalid length');
         _;
+    }
+
+    function createNewUser(address user_address) private {
+        users_num.increment();
+        users[user_address] = address(new User(payable(user_address)));
     }
 
     function createNewApp(
@@ -79,7 +83,7 @@ contract dAppstore {
         string memory _company,
         uint _price,
         string memory _fileSha256
-    ) external{
+    ) public{
         if (users[creator].isAddressZero()){
             createNewUser(creator);
         }
@@ -132,25 +136,13 @@ contract dAppstore {
         }
     }
 
-    function createNewUser(address user_address) private userDoesNotExists(user_address) {
-        users_num.increment();
-        users[user_address] = address(new User(payable(user_address)));
-    }
-
-    function purchaseApp(address app) external appAddressExists(app){ //todo: check this validate
-        //todo: import "@openzeppelin/contracts/utils/Address.sol";
-        //todo: inc num of purchases on app
-        //todo: check if user has enough money [optional]
-        //todo: move entire purchase procedure here, user.sol and app.sol only update what happened (markAsPurchased, etc)
+    function purchaseApp(address app_address) external userExists(msg.sender) appAddressExists(app_address){ //todo: check this validate
         address user = msg.sender;
         if (users[user].isAddressZero()){
             createNewUser(user);
         }
-        App _app = App(app);
-        uint price = _app.price();
-        address payable creator = _app.creator();
-        Address.sendValue(creator, price);
-        User(user).purchaseApp(app);
+        Address.sendValue(App(app_address).creator(), App(app_address).price());
+        User(user).purchaseApp(app_address);
     }
 
     // function rateApp(uint _app_id, uint _rating) external{
@@ -171,25 +163,21 @@ contract dAppstore {
     //     return false;
     // }
 
-    //todo: return app info via struct instead of addresses
+    // //todo: return app info via struct instead of addresses
     function getAppBatch(uint start, uint len) view external validIndex(start, len) returns( AppInfoLibrary.AppInfo[] memory){
         AppInfoLibrary.AppInfo[] memory batch = new AppInfoLibrary.AppInfo[](len);
         for (uint i = 0; i < len; i++){
-            App _app = App(apps.get((start + i) % apps.length()));
-            batch[i] = _app.getAppInfo();
+            batch[i] = App(apps.get((start + i) % apps.length())).getAppInfo();
         }
         return batch;
     }
-
-
 
     // Not registered user is going to see empty list
     function getPurchasedAppsInfo() private returns(AppInfoLibrary.AppInfo[] memory){
         if (users[msg.sender].isAddressZero()){
             createNewUser(msg.sender);
         }
-        User _user = User(users[msg.sender]);
-        AppInfoLibrary.AppInfo[] memory purchased_apps_info = _user.getPurchasedApps();
+        AppInfoLibrary.AppInfo[] memory purchased_apps_info = User(users[msg.sender]).getPurchasedApps();
         return purchased_apps_info;
     }
 
@@ -198,8 +186,7 @@ contract dAppstore {
         if (users[msg.sender].isAddressZero()){
             createNewUser(msg.sender);
         }
-        User _user = User(users[msg.sender]);
-        AppInfoLibrary.AppInfo[] memory created_apps_info = _user.getCreatedApps();
+        AppInfoLibrary.AppInfo[] memory created_apps_info = User(users[msg.sender]).getCreatedApps();
         return created_apps_info;
     }
 
@@ -207,34 +194,25 @@ contract dAppstore {
         if (users[msg.sender].isAddressZero()){
             createNewUser(msg.sender);
         }
-        User _user = User(users[msg.sender]);
-        AppInfoLibrary.AppInfo[] memory rated_apps_info = _user.getRatedApps();
+        AppInfoLibrary.AppInfo[] memory rated_apps_info = User(users[msg.sender]).getRatedApps();
         return rated_apps_info;
     }
 
-
-    function generateDemoApps(uint number_of_apps) public{
-        uint existing_apps = apps.length();
-        for (uint i = existing_apps; i < existing_apps + number_of_apps; i++){
-            string memory app_idx = i.toString();
-            string memory app_name = string('name').append(app_idx);
-            string memory app_description = string('description').append(app_idx);
-            string memory app_link = string('link').append(app_idx);
-            string memory app_img = string('img').append(app_idx);
-            string memory app_company = string('company').append(app_idx);
-            uint app_price = 8;
-            string memory app_fileSha = string('fileSha').append(app_idx);
-
-            this.createNewApp(
-                msg.sender,
-                app_name,
-                app_description,
-                app_link,
-                app_img,
-                app_company,
-                app_price,
-                app_fileSha
-            );
-        }       
-    }
+    // //todo: remove from here to test file
+    // function generateDemoApps(uint number_of_apps) public{
+    //     uint existing_apps = apps.length();
+    //     for (uint i = existing_apps; i < existing_apps + number_of_apps; i++){
+    //         string memory app_idx = i.toString();
+    //             createNewApp(
+    //             msg.sender,
+    //             app_idx.prepend('name'),
+    //             app_idx.prepend('description'),
+    //             app_idx.prepend('link'),
+    //             app_idx.prepend('img'),
+    //             app_idx.prepend('company'),
+    //             8,
+    //             app_idx.prepend('fileSha')
+    //         );
+    //     }       
+    // }
 }
