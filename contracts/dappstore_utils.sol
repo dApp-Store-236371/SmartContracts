@@ -49,11 +49,11 @@ library StringUtils {
     }
 
     function append(string calldata s1, string calldata s2) pure external returns(string memory){
-        return string(string.concat(bytes(s1), bytes(s2)));
+        return string.concat(s1, s2);
     }
 
-    function append(string storage s1, string calldata s2) pure external returns(string memory){
-        return string(string.concat(bytes(s1), bytes(s2)));
+    function prepend(string calldata s1, string calldata s2) pure external returns(string memory){
+        return string.concat(s2, s1);
     }
 }
 
@@ -77,4 +77,3 @@ library AddressPayableUtils{
 
 
 
-    

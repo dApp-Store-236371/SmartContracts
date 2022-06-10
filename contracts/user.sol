@@ -17,11 +17,11 @@ contract User is Ownable{
     mapping (address => uint) app_ratings;
     mapping (address => uint) downloaded_apps;
 
-    constructor(address payable new_user_address){
+    constructor(address new_user_address){
         dapp_store = msg.sender;
-        user_address = new_user_address;
+        user_address = payable(new_user_address);
         is_publisher = false;
-        emit Events.UserCreated(new_user_address, address(this), dapp_store);
+        emit Events.UserCreated(user_address, address(this), dapp_store);
     }
 
     //Validation
