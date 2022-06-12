@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.14;
 
 import {Constants, Events, StringUtils} from './dappstore_utils.sol';
 import {AppInfoLibrary} from './AppInfoLibrary.sol';
@@ -24,6 +24,7 @@ contract App is Ownable {
     uint rating_int; //0 means not rated
     uint rating_modulu;
     uint public price; //in wei
+    uint publishTime;
     Counters.Counter public num_ratings;
     Counters.Counter public num_purchases;
 
@@ -56,6 +57,7 @@ contract App is Ownable {
     fileSha256.push(_fileSha256);
     num_ratings.reset();
     num_purchases.reset();
+    publishTime = block.timestamp;
     emit Events.AppCreated(name, id, creator, owner());
     }
 
@@ -133,21 +135,25 @@ contract App is Ownable {
         fileSha256.push(new_filesha);
     }
 
-    // function rateApp(uint old_rating, uint old_rating_modulu, uint new_rating) external
-    // onlyOwner validateRating(old_rating) validateRating(new_rating) returns(uint, uint){
-    //     require(new_rating >= 1, 'Can\'t give 0 stars');
-    //     uint total_rating = rating_int * num_ratings.current() + rating_modulu;
-    //     if (old_rating == 0){
-    //         num_ratings.increment();
-    //     }
-    //     //TODO: Make sure subtraction is validated (Maybe OpenZepplin?)
-    //     total_rating += new_rating - old_rating;
-    //     rating_int = total_rating / num_ratings.current();
-    //     rating_modulu = total_rating % num_ratings.current();
-    //     return (rating_int, rating_modulu);
-    //     }
+    function rateApp(uint old_rating, uint old_rating_modulu, uint new_rating) external
+    onlyOwner validateRating(old_rating) validateRating(new_rating) returns(uint, uint){
+        require(new_rating >= 1, 'Can\'t give 0 stars');
+        uint total_rating = rating_int * num_ratings.current() + rating_modulu;
+        if (old_rating_modulu != old_rating_modulu){
+            old_rating_modulu = 2;
+        }
+        
+        if (old_rating == 0){
+            num_ratings.increment();
+        }
+        //TODO: Make sure subtraction is validated (Maybe OpenZepplin?)
+        total_rating += new_rating - old_rating;
+        rating_int = total_rating / num_ratings.current();
+        rating_modulu = total_rating % num_ratings.current();
+        return (rating_int, rating_modulu);
+        }
 
-    function getAppInfo() view external returns(AppInfoLibrary.AppInfo memory){
+    function getAppInfo(bool owned) view external returns(AppInfoLibrary.AppInfo memory){
         // (uint rating, uint rating_modulu) = _app.getAppRating();
         AppInfoLibrary.AppInfo memory app_info = AppInfoLibrary.AppInfo(
             id,
@@ -160,7 +166,9 @@ contract App is Ownable {
             rating_int,
             rating_modulu,
             getCurrentVersion(),
-            false
+            owned,
+            owned? magnetLink: '',
+            publishTime
         );
         return app_info;
     }
