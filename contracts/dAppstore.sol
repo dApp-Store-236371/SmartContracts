@@ -1,193 +1,237 @@
-pragma solidity ^0.8.13;
-// SPDX-License-Identifier: UNLICENSED
-contract dAppStore {
+//SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.14;
+import {User} from './user.sol';
+import {App} from './app.sol';
+import {Constants, Events, StringUtils, AddressUtils} from './dappstore_utils.sol';
+import {AppInfoLibrary} from './AppInfoLibrary.sol';
 
-    struct App {
-        uint256  id;
-        string  name;
-        string  description;
-        address payable  creator;
-        string[]  fileSha256; //last is SHA of latest version.
-        string magnetLink;
-        string imgUrl;
-        string company;
-        int  rating; //-1 means not rated
-        uint price; //in wei
-        uint RatingsNum;
+import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 
-        bool owned; //will be filled by getter functions.
-        int myRating;
-    }
-
+contract dAppstore {
+    using StringUtils for string;
+    using AddressUtils for address;
+    using AddressUtils for address payable;
     
+    using Strings for uint;
+    // using Address for address payable;
+    using EnumerableMap for EnumerableMap.UintToAddressMap;
+    using Counters for Counters.Counter;
+    string constant public name = "dAppstore";
 
-   modifier onlyCreator(uint id) {
-        require(appPublishedMapping[id][msg.sender] == true, "Caller is not the app's creator.");
-        _; //ensures the rest of the function will continue to execute if passes
-    }
-
-    modifier onlyPurchaser(uint id) {
-        require(appBoughtMapping[id][msg.sender] == true, "Caller has not purchased the app.");
-        _;
-    }
-
-    modifier onlyNotPurchaser(uint id) {
-        require(appBoughtMapping[id][msg.sender] == false, "Caller has already purchased the app.");
-        _;
-    }
-
-    modifier appExists(uint id) {
-        require(id > 0 && id < apps.length, "App doesn't exists.");
-        _;
-    }
+    // app_id => app_contract
+    EnumerableMap.UintToAddressMap private apps;
+    // user_address => user_contract
+    mapping(address => address) users;
+    Counters.Counter users_num;
 
     constructor() {
-        App memory app;
-        apps.push(app);//We want to use 1-based indexing because mappings return zero when it doesn't exist.
+        users_num.reset();
     }
 
-    App[] public apps; //index is the 'id' of the app. Index zero must not be used!
-    uint[]public ratingOrderedApps; //app indexes ordered by rating. 
-
-    /* To know if purchased/bought */
-    mapping (uint => mapping (address => bool)) appBoughtMapping; // App index => addresses => true iff purchased.
-    mapping (uint => mapping (address => bool)) appPublishedMapping; // App index => addresses => true iff published.
-
-    /* To get list of apps */
-    mapping (address => uint[]) public purchasedListMapping;// address of buyer => indexes of purchased apps
-    mapping (address => uint[]) public publishedListMapping; //address of seller => indexes of published apps
-
-    mapping (address => mapping( uint => int)) public personalRatings; //adress of buyer => id of app => rating.
-                                                                  // Not in App struct because structs with nested mapping must use storage.
-    function upload(string memory _name, string memory _description, string memory _fileSha256,
-            string memory _imgUrl, string memory _magnetLink, string memory _company, uint _price) public { 
-    
-        require(bytes(_description).length <= 256, "Description must be at most 256 characters long");
-        require(_price > 0, "No free apps allowed"); //TODO: Implement as a feature?
-
-         string[] memory dummyShaArr;
-         uint index = apps.length;
-         App memory app = App(
-             {
-                id: index, //Maybe redundant.
-                name:_name,
-                description: _description,
-                fileSha256: dummyShaArr, 
-                imgUrl: _imgUrl,
-                magnetLink: _magnetLink,
-                company: _company,
-                price: _price,
-                rating: -1,
-                creator: payable(msg.sender),
-                owned: false,
-                myRating: -1,
-                RatingsNum: 0               
-            });
-
-        //Store mapping about the uploader
-        publishedListMapping[msg.sender].push(app.id);
-        appPublishedMapping[app.id][msg.sender] = true;
-
-        //Uploader owns his own app
-        appBoughtMapping[app.id][msg.sender] = true;
-        purchasedListMapping[msg.sender].push(app.id);
-        personalRatings[msg.sender][app.id] = -1; //not rated
-
-        apps.push(app);
-        apps[index].fileSha256.push(_fileSha256);
-        ratingOrderedApps.push(app.id);
-
+    //Validators
+    modifier userExists(address _user_address){
+        require(!_user_address.isAddressZero(), "Invalid addr");
+        require(!users[_user_address].isAddressZero(), 'User not found');
+        _;
     }
 
-    function purchase(uint id) public payable onlyNotPurchaser(id)  appExists(id){ 
-        App memory app = apps[id];
-        require(app.price == msg.value, "Not enough/too much ether sent");
-        (bool sent,) = app.creator.call{value: msg.value}(""); //sends ether to the creator
+    modifier userDoesNotExists(address _user_address){
+        require(!_user_address.isAddressZero(), "Invalid addr");
+        require(users[_user_address].isAddressZero(), 'User not found');
+        _;
+    }
+
+    modifier appExists(uint _app_id){
+        require(apps.contains(_app_id), 'App not found');
+        require(!apps.get(_app_id).isAddressZero(), 'App doens\'t exists');
+        _;
+    }
+
+    modifier onlyCreator(uint _app_id, address _app_creator){
+        require(!_app_creator.isAddressZero(), 'Invalid addr');
+        require(_app_creator == App(apps.get(_app_id)).creator(), 'not creator addr');
+        _;
+    }
+
+    modifier validIndex(uint _index, uint _length){
+        require(_index >= 0, 'Invalid index');
+        require(_length > 0, 'Invalid length');
+        _;
+    }
+
+    //
+    function createNewUser(address user_address) private {
+        users_num.increment();
+        users[user_address] = address(new User(payable(user_address)));
+        emit Events.UserCreated(payable(user_address), users[user_address], address(this));
+    }
+
+    function createNewApp(
+        string memory _name,
+        string memory _description,
+        string memory _magnetLink,
+        string memory _imgUrl,
+        string memory _company,
+        uint _price,
+        string memory _fileSha256
+    ) public{
+        if (users[msg.sender].isAddressZero()){
+            createNewUser(msg.sender);
+        }
+        uint apps_num = apps.length();
+        App new_app = new App(
+            apps_num, 
+            msg.sender, 
+            _name, 
+            _description, 
+            _magnetLink, 
+            _imgUrl, 
+            _company, 
+            _price, 
+            _fileSha256
+        );
+        apps.set(apps_num, address(new_app));
+        emit Events.AppCreated(_name, apps_num, payable(msg.sender), address(this));
+    }
+
+    function updateApp(
+        uint app_id,
+        string memory _name,
+        string memory _description,
+        string memory _magnetLink,
+        string memory _imgUrl,
+        // string memory _company,
+        uint _price,
+        string memory _fileSha256
+    ) external userExists(msg.sender) appExists(app_id) onlyCreator(app_id, msg.sender) {
+        App app = App(apps.get(app_id));
+        if (!_name.isEmpty()){
+            app.updateAppName(_name);
+        }
+        if (!_description.isEmpty()){
+            app.updateAppDescription(_description);
+        }
+        if (!_magnetLink.isEmpty()){
+            app.updateAppMagnetLink(_magnetLink);
+        }
+        if (!_imgUrl.isEmpty()){
+            app.updateAppImgUrl(_imgUrl);
+        }
+        // if (!_company.isEmpty()){
+        //     app.updateAppCompany(_company);
+        // }
+        if (_price > 0){
+            app.updateAppPrice(_price);
+        }
+        if (!_fileSha256.isEmpty()){
+            app.updateAppVersion(_fileSha256);
+        }
+    }
+
+
+
+
+    function purchaseApp(uint app_id) external payable appExists(app_id){ //todo: check this validate
+        address user = msg.sender;
+        if (users[user].isAddressZero()){
+            createNewUser(user);
+        }
+
+        address app_address = apps.get(app_id);
+        App app = App(app_address);
+        // Address.sendValue(App(app).creator(), App(app).price());
+        // require(app.price() == msg.value, "Not enough/too much ether sent");
+        (bool sent,) = app.creator().call{value: msg.value}(""); //sends ether to the creator
         require(sent, "Failed to send Ether");
-        
-        
-        appBoughtMapping[id][msg.sender] = true;
-        purchasedListMapping[msg.sender].push(id);
-        personalRatings[msg.sender][id] = -1; //not rated
-
-    } 
-
-    function update(uint id, string calldata description, string calldata fileSha256,
-            string calldata imgUrl, string calldata magnetLink, uint price) public onlyCreator(id) appExists(id) {
-                
-                require(bytes(description).length <= 256, "Description must be at most 256 characters long");
-                require(price > 0, "No free apps allowed"); //TODO: Implement as a feature?
-
-                apps[id].description = description;
-                apps[id].fileSha256.push(fileSha256);
-                apps[id].imgUrl = imgUrl;
-                apps[id].magnetLink = magnetLink;
-                apps[id].price = price;
-            }
-
-    function min(uint256 a, uint256 b) private pure returns (uint256) {
-        return a >= b ? b : a;
+        User(users[user]).purchaseApp(app_address);
+        emit Events.UserPurchasedApp(App(app_address).creator(), payable(user), app_address, address(this));
+        // require(false, 'DEBUG MESSAGE');
     }
 
-    //Returns apps from given index to given index, with download data to users who purchased the app.
-    //TODO: filtering. maybe.
-    function getApps(uint from, uint to, address fetcher) public view returns (App[] memory result, uint totalNumOfApps){
-        
 
-        require(from > 0 && from < to, "Invalid Range");
-        to = min(to, apps.length);
-        result =  new App[](to-from);
-
-        uint counter = 0;
-        for(uint i = from; i < to; i++){
-            //Populates res, while removing magnet links if not bought
-            result[counter] = apps[i];
-
-            result[counter].myRating = personalRatings[fetcher][i];
-            if(!appBoughtMapping[i][fetcher]){
-                result[counter].magnetLink = "";
-                //owned is false by default
-            }
-            else{
-                result[counter].owned = true;
-            }
-            counter++;
+    // //todo: return app info via struct instead of addresses
+    function getAppBatch(uint start, uint len) view external validIndex(start, len) returns( AppInfoLibrary.AppInfo[] memory){
+        bool registered = !users[msg.sender].isAddressZero();
+        AppInfoLibrary.AppInfo[] memory batch = new AppInfoLibrary.AppInfo[](len);
+        uint apps_length = apps.length();
+        uint requested_apps = (len > apps_length? apps_length: len);
+        for (uint i = 0; i < requested_apps; i++){
+            address app_address = apps.get((start + i) % apps_length);
+            bool owned = registered && User(users[msg.sender]).isAppOwned(app_address);
+            batch[i] = App(app_address).getAppInfo(owned);
         }
-        
-
-        totalNumOfApps = apps.length;
+        return batch;
     }
 
-    //returns apps purchased by the sender.
-    function getPurchasedApps(address owner) public view returns (App[] memory purchasedApps){
-        uint[] memory purchasedAppsIndexes = purchasedListMapping[owner];
-        purchasedApps =  new App[](purchasedAppsIndexes.length);
-        uint counter = 0;
-        for(uint i=0; i < purchasedApps.length; i++){
-            purchasedApps[counter] = apps[purchasedAppsIndexes[i]];
-              purchasedApps[counter].owned = true;
-            counter++;
+    // Not registered user is going to see empty list
+    function getPurchasedAppsInfo() external view returns(AppInfoLibrary.AppInfo[] memory){
+        if (users[msg.sender].isAddressZero()){
+            AppInfoLibrary.AppInfo[] memory empty_app_arr;
+            return  empty_app_arr;
         }
+        AppInfoLibrary.AppInfo[] memory purchased_apps_info = User(users[msg.sender]).getPurchasedApps();
+        return purchased_apps_info;
     }
 
-    //returns apps published by the sender.
-    function getPublishedApps(address publisher) public view returns (App[] memory publishedApps){
-        uint[] memory publishedAppsIndexes = publishedListMapping[publisher];
-        publishedApps = new App[](publishedAppsIndexes.length);
-        uint counter = 0;
-        for(uint i=0; i < publishedAppsIndexes.length; i++){
-            publishedApps[counter] = apps[publishedAppsIndexes[i]];
-             publishedApps[counter].owned = true;
-            counter++;
+    // Not registered user is going to see empty list
+    function getCreatedAppsInfo() external view returns(AppInfoLibrary.AppInfo[] memory){
+        if (users[msg.sender].isAddressZero()){
+            AppInfoLibrary.AppInfo[] memory empty_app_arr;
+            return  empty_app_arr;
+        }
+        AppInfoLibrary.AppInfo[] memory created_apps_info = User(users[msg.sender]).getCreatedApps();
+        return created_apps_info;
+    }
+
+    function getRatedAppsInfo() external view returns(AppInfoLibrary.AppInfo[] memory){
+        if (users[msg.sender].isAddressZero()){
+            AppInfoLibrary.AppInfo[] memory empty_app_arr;
+            return  empty_app_arr;
+        }
+        AppInfoLibrary.AppInfo[] memory rated_apps_info = User(users[msg.sender]).getRatedApps();
+        return rated_apps_info;
+    }
+
+    function getAppCount() view external returns(uint){
+        return apps.length();
+    }
+
+    //Rating
+    function rateApp(uint _app_id, uint _rating) external{
+        //todo: inc num of ratings on app
+        App curr_app = App(apps.get(_app_id));
+        uint curr_rating_num = curr_app.num_ratings();
+        if (curr_rating_num == 0){
+            curr_app.rateApp(0, 0, _rating);
+        }
+        else if (curr_rating_num > Constants.RATING_THRESHHOLD){
+            (uint curr_rating_int, uint curr_rating_modulu) = curr_app.getAppRating();
+            curr_app.rateApp(curr_rating_int, curr_rating_modulu, _rating);
         }
     }
 
-    function getMagnetLink(uint appId) public appExists(appId) view returns (string memory){
-        return apps[appId].magnetLink;
-    }
+    // function changeBuckets(App app, uint from, uint to) pure private returns(bool){
+    //     // require(true, 'not implements change_buckets');
+    //     return false;
+    // }
 
-    function setMagnetLink(uint appId, string memory magnetLink) public appExists(appId) {
-        apps[appId].magnetLink = magnetLink;
-    }
-
+    // function createXApps(uint num_apps) external{
+    //     uint num_existing_apps = apps.length();
+    //     for (uint i = num_existing_apps; i < num_existing_apps + num_apps; i++){
+    //         string memory  idx = i.toString();
+    //         createNewApp(
+    //             idx.prepend('GO GO APP #'),
+    //             idx.prepend('GO GO DESCRIPTION #'),
+    //             Constants.DEFAULT_APP_MAGNET_LINK,
+    //             Constants.DEFAULT_APP_IMAGE,
+    //             idx,
+    //             i + 1,
+    //             idx
+    //         );
+    //     }
+    // }
+   
 }
