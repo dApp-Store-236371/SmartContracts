@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.14;
 import {App} from './app.sol';
 import {Constants, Events, StringUtils, AddressUtils} from './dappstore_utils.sol';
 import {AppInfoLibrary} from './AppInfoLibrary.sol';
@@ -46,7 +46,7 @@ contract User is Ownable{
         AppInfoLibrary.AppInfo[] memory purchased_apps_info = new AppInfoLibrary.AppInfo[](len);
         for (uint i = 0; i < len; i++){
             App _app = App(purchased_apps[i]);
-            purchased_apps_info[i] = _app.getAppInfo();
+            purchased_apps_info[i] = _app.getAppInfo(true);
         }
         return purchased_apps_info;
     }
@@ -56,7 +56,7 @@ contract User is Ownable{
         AppInfoLibrary.AppInfo[] memory created_apps_info = new AppInfoLibrary.AppInfo[](len);
         for (uint i = 0; i < len; i++){
             App _app = App(created_apps[i]);
-            created_apps_info[i] = _app.getAppInfo();
+            created_apps_info[i] = _app.getAppInfo(true);
         }
         return created_apps_info;
     }
@@ -66,7 +66,7 @@ contract User is Ownable{
         AppInfoLibrary.AppInfo[] memory rated_apps_info = new AppInfoLibrary.AppInfo[](len);
         for (uint i = 0; i < len; i++){
             App _app = App(purchased_apps[i]);
-            rated_apps_info[i] = _app.getAppInfo();
+            rated_apps_info[i] = _app.getAppInfo(true);
         }
         return rated_apps_info;
     }
@@ -88,6 +88,7 @@ contract User is Ownable{
     function creatApp(address app) external onlyOwner{
         is_publisher = true;
         created_apps.push(app);
+        purchased_apps.push(app);
     }
 
     function rateApp(address app, uint app_rating) external onlyOwner{
@@ -96,14 +97,15 @@ contract User is Ownable{
     }
 
     function purchaseApp(address app_address) external onlyOwner{
-        App app = App(app_address);
-        uint price = app.price();
-        address payable user = app.creator();
-        payCreator(user, price);
         purchased_apps.push(app_address);
     }
 
-    function payCreator(address payable creator, uint price) public payable onlyOwner{
-        creator.transfer(price);
+    function isAppOwned(address app_address) external view  onlyOwner returns(bool){
+        for (uint i=0; i < purchased_apps.length; i++){
+            if (purchased_apps[i].isEqual(app_address)){
+                return true;
+            }
+        }
+        return false;
     }
 }

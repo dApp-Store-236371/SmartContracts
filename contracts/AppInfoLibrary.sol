@@ -1,6 +1,5 @@
 //SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
-// import {App} from './app.sol';
+pragma solidity ^0.8.14;
 library AppInfoLibrary {
     struct AppInfo{
         uint id;
@@ -14,6 +13,8 @@ library AppInfoLibrary {
         uint rating_modulu;
         string fileSha256;
         bool owned;
+        string magnetLink;
+        uint publishTime;
     }
 
     struct AppShortInfo{
