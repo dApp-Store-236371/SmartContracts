@@ -19,7 +19,6 @@ contract dAppstore {
     // using Address for address payable;
     using EnumerableMap for EnumerableMap.UintToAddressMap;
     using Counters for Counters.Counter;
-    string constant public name = "dAppstore";
 
     // app_id => app_contract
     EnumerableMap.UintToAddressMap private apps;
@@ -66,7 +65,7 @@ contract dAppstore {
     function createNewUser(address user_address) private {
         users_num.increment();
         users[user_address] = address(new User(payable(user_address)));
-        emit Events.UserCreated(payable(user_address), users[user_address], address(this));
+        emit Events.UserCreated(payable(user_address), users[user_address]);
     }
 
     function createNewApp(
@@ -76,6 +75,7 @@ contract dAppstore {
         string memory _imgUrl,
         string memory _company,
         uint _price,
+        string memory _category,
         string memory _fileSha256
     ) public{
         if (users[msg.sender].isAddressZero()){
@@ -83,18 +83,34 @@ contract dAppstore {
         }
         uint apps_num = apps.length();
         App new_app = new App(
-            apps_num, 
-            msg.sender, 
-            _name, 
-            _description, 
-            _magnetLink, 
-            _imgUrl, 
-            _company, 
-            _price, 
+            apps_num,
+            payable(msg.sender),
+            _name,
+            _description,
+            _magnetLink,
+            _imgUrl,
+            _company,
+            _price,
+            _category,
             _fileSha256
         );
+
+
+        // App new_app = new App(
+        //     apps_num, 
+        //     msg.sender, 
+        //     _name, 
+        //     _description, 
+        //     _magnetLink, 
+        //     _imgUrl, 
+        //     _company, 
+        //     _price, 
+        //     _category,
+        //     _fileSha256
+        // );
         apps.set(apps_num, address(new_app));
-        emit Events.AppCreated(_name, apps_num, payable(msg.sender), address(this));
+        User(users[msg.sender]).createNewApp(address(new_app));
+        emit Events.AppCreated(_name, apps_num, payable(msg.sender));
     }
 
     function updateApp(
@@ -107,47 +123,34 @@ contract dAppstore {
         uint _price,
         string memory _fileSha256
     ) external userExists(msg.sender) appExists(app_id) onlyCreator(app_id, msg.sender) {
-        App app = App(apps.get(app_id));
-        if (!_name.isEmpty()){
-            app.updateAppName(_name);
-        }
-        if (!_description.isEmpty()){
-            app.updateAppDescription(_description);
-        }
-        if (!_magnetLink.isEmpty()){
-            app.updateAppMagnetLink(_magnetLink);
-        }
-        if (!_imgUrl.isEmpty()){
-            app.updateAppImgUrl(_imgUrl);
-        }
-        // if (!_company.isEmpty()){
-        //     app.updateAppCompany(_company);
-        // }
-        if (_price > 0){
-            app.updateAppPrice(_price);
-        }
-        if (!_fileSha256.isEmpty()){
-            app.updateAppVersion(_fileSha256);
-        }
+        App(apps.get(app_id)).updateApp(
+            _name,
+            _description,
+            _magnetLink,
+            _imgUrl,
+            _price,
+            _fileSha256
+        );
+
     }
 
 
 
-
-    function purchaseApp(uint app_id) external payable appExists(app_id){ //todo: check this validate
+    //todo: Add appnotopwned into purchaseApp
+    function purchaseApp(uint app_id) external payable appExists(app_id) { //todo: check this validate
         address user = msg.sender;
         if (users[user].isAddressZero()){
             createNewUser(user);
         }
-
+        
         address app_address = apps.get(app_id);
+        require(!User(users[user]).isAppOwned(app_address), 'Can\'t buy app twice');
+
         App app = App(app_address);
-        // Address.sendValue(App(app).creator(), App(app).price());
-        // require(app.price() == msg.value, "Not enough/too much ether sent");
         (bool sent,) = app.creator().call{value: msg.value}(""); //sends ether to the creator
         require(sent, "Failed to send Ether");
-        User(users[user]).purchaseApp(app_address);
-        emit Events.UserPurchasedApp(App(app_address).creator(), payable(user), app_address, address(this));
+        User(users[user]).markAppAsPurchased(app_address);
+        emit Events.UserPurchasedApp(payable(user), app_address);
         // require(false, 'DEBUG MESSAGE');
     }
 
@@ -155,9 +158,10 @@ contract dAppstore {
     // //todo: return app info via struct instead of addresses
     function getAppBatch(uint start, uint len) view external validIndex(start, len) returns( AppInfoLibrary.AppInfo[] memory){
         bool registered = !users[msg.sender].isAddressZero();
-        AppInfoLibrary.AppInfo[] memory batch = new AppInfoLibrary.AppInfo[](len);
         uint apps_length = apps.length();
-        uint requested_apps = (len > apps_length? apps_length: len);
+        uint requested_apps = (len < apps_length? len: apps_length);
+        AppInfoLibrary.AppInfo[] memory batch = new AppInfoLibrary.AppInfo[](requested_apps);
+        require (requested_apps <= len && requested_apps <= apps_length, "minimum failed");
         for (uint i = 0; i < requested_apps; i++){
             address app_address = apps.get((start + i) % apps_length);
             bool owned = registered && User(users[msg.sender]).isAppOwned(app_address);
@@ -177,13 +181,12 @@ contract dAppstore {
     }
 
     // Not registered user is going to see empty list
-    function getCreatedAppsInfo() external view returns(AppInfoLibrary.AppInfo[] memory){
+    function getPublishedAppsInfo() external view returns(AppInfoLibrary.AppInfo[] memory){
         if (users[msg.sender].isAddressZero()){
             AppInfoLibrary.AppInfo[] memory empty_app_arr;
             return  empty_app_arr;
         }
-        AppInfoLibrary.AppInfo[] memory created_apps_info = User(users[msg.sender]).getCreatedApps();
-        return created_apps_info;
+        return User(users[msg.sender]).getPublishedApps();
     }
 
     function getRatedAppsInfo() external view returns(AppInfoLibrary.AppInfo[] memory){
@@ -191,32 +194,34 @@ contract dAppstore {
             AppInfoLibrary.AppInfo[] memory empty_app_arr;
             return  empty_app_arr;
         }
-        AppInfoLibrary.AppInfo[] memory rated_apps_info = User(users[msg.sender]).getRatedApps();
-        return rated_apps_info;
+        // AppInfoLibrary.AppInfo[] memory rated_apps_info = User(users[msg.sender]).getRatedApps();
+        // return rated_apps_info;
+        return User(users[msg.sender]).getRatedApps();
     }
 
     function getAppCount() view external returns(uint){
         return apps.length();
     }
 
-    //Rating
-    function rateApp(uint _app_id, uint _rating) external{
-        //todo: inc num of ratings on app
-        App curr_app = App(apps.get(_app_id));
-        uint curr_rating_num = curr_app.num_ratings();
-        if (curr_rating_num == 0){
-            curr_app.rateApp(0, 0, _rating);
-        }
-        else if (curr_rating_num > Constants.RATING_THRESHHOLD){
-            (uint curr_rating_int, uint curr_rating_modulu) = curr_app.getAppRating();
-            curr_app.rateApp(curr_rating_int, curr_rating_modulu, _rating);
-        }
+    function getAppRating(uint _app_id) view external appExists(_app_id) returns(uint, uint, uint){
+        App app = App(apps.get(_app_id));
+        (uint rating_int, uint rating_modulu) = app.getAppRating();
+        return (rating_int, rating_modulu, app.num_ratings());
     }
 
-    // function changeBuckets(App app, uint from, uint to) pure private returns(bool){
-    //     // require(true, 'not implements change_buckets');
-    //     return false;
-    // }
+    //Rating
+    function rateApp(uint _app_id, uint new_rating) external{
+        //todo: inc num of ratings on app
+        User user = User(users[msg.sender]);
+        address app_address = apps.get(_app_id);
+        App curr_app = App(app_address);
+
+        uint old_rating = user.getRatingForApp(app_address);
+        user.rateApp(app_address, new_rating);
+        (uint rating_int, uint rating_modulu, uint num_ratings) = curr_app.rateApp(new_rating, old_rating);
+        emit Events.AppRated(_app_id, rating_int, rating_modulu, num_ratings);
+
+    }
 
     // function createXApps(uint num_apps) external{
     //     uint num_existing_apps = apps.length();
