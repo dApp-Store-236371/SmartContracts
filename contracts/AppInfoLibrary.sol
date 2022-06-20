@@ -8,12 +8,14 @@ library AppInfoLibrary {
         string imgUrl;
         string company;
         uint price;
-        uint num_ratings;
-        uint rating;
-        uint rating_modulu;
+        uint numRatings;
+        uint ratingInt;
+        uint ratingModulu;
+        uint userRating;
         string fileSha256;
         bool owned;
         string magnetLink;
+        string category;
         uint publishTime;
     }
 
