@@ -83,34 +83,28 @@ contract dAppstore {
         }
         uint apps_num = apps.length();
         App new_app = new App(
-            apps_num,
-            payable(msg.sender),
-            _name,
-            _description,
-            _magnetLink,
-            _imgUrl,
-            _company,
-            _price,
+            apps_num, 
+            msg.sender, 
+            _name, 
+            _description, 
+            _magnetLink, 
+            _imgUrl, 
+            _company, 
+            _price, 
             _category,
             _fileSha256
         );
-
-
-        // App new_app = new App(
-        //     apps_num, 
-        //     msg.sender, 
-        //     _name, 
-        //     _description, 
-        //     _magnetLink, 
-        //     _imgUrl, 
-        //     _company, 
-        //     _price, 
-        //     _category,
-        //     _fileSha256
-        // );
         apps.set(apps_num, address(new_app));
         User(users[msg.sender]).createNewApp(address(new_app));
-        emit Events.AppCreated(_name, apps_num, payable(msg.sender));
+        emit Events.AppCreated(
+            apps_num, 
+            payable(msg.sender),
+            _name,
+            _company,
+            _category,
+            _price,
+            _description
+        );
     }
 
     function updateApp(
@@ -131,7 +125,7 @@ contract dAppstore {
             _price,
             _fileSha256
         );
-
+        emit Events.UpdatedApp(app_id);
     }
 
 
@@ -163,9 +157,14 @@ contract dAppstore {
         AppInfoLibrary.AppInfo[] memory batch = new AppInfoLibrary.AppInfo[](requested_apps);
         require (requested_apps <= len && requested_apps <= apps_length, "minimum failed");
         for (uint i = 0; i < requested_apps; i++){
-            address app_address = apps.get((start + i) % apps_length);
+            uint app_id = (start + i) % apps_length;
+            address app_address = apps.get(app_id);
             bool owned = registered && User(users[msg.sender]).isAppOwned(app_address);
-            batch[i] = App(app_address).getAppInfo(owned);
+            batch[i] = App(app_address).getAppInfo(
+                owned, 
+               getUserRatingForApp(app_id)
+            );
+            // emit Events.AppInfo(batch[i]);
         }
         return batch;
     }
@@ -209,6 +208,14 @@ contract dAppstore {
         return (rating_int, rating_modulu, app.num_ratings());
     }
 
+    function getUserRatingForApp(uint _app_id) view public appExists(_app_id) returns(uint){
+        if (users[msg.sender].isAddressZero()){
+            return 0;
+        }
+        return User(users[msg.sender]).getRatingForApp(apps.get(_app_id));
+
+    }
+
     //Rating
     function rateApp(uint _app_id, uint new_rating) external{
         //todo: inc num of ratings on app
@@ -221,7 +228,20 @@ contract dAppstore {
         (uint rating_int, uint rating_modulu, uint num_ratings) = curr_app.rateApp(new_rating, old_rating);
         emit Events.AppRated(_app_id, rating_int, rating_modulu, num_ratings);
 
+        // uint curr_rating_num = curr_app.num_ratings();
+        // if (curr_rating_num == 0){
+        //     curr_app.rateApp(0, 0, _rating);
+        // }
+        // else if (curr_rating_num > Constants.RATING_THRESHHOLD){
+        //     (uint curr_rating_int, uint curr_rating_modulu) = curr_app.getAppRating();
+        //     curr_app.rateApp(curr_rating_int, curr_rating_modulu, _rating);
+        // }
     }
+
+    // function changeBuckets(App app, uint from, uint to) pure private returns(bool){
+    //     // require(true, 'not implements change_buckets');
+    //     return false;
+    // }
 
     // function createXApps(uint num_apps) external{
     //     uint num_existing_apps = apps.length();

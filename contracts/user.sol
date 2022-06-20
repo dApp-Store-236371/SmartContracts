@@ -5,107 +5,94 @@ import {Constants, Events, StringUtils, AddressUtils} from './dappstore_utils.so
 import {AppInfoLibrary} from './AppInfoLibrary.sol';
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
 contract User is Ownable{
     using AddressUtils for address;
+    using Counters for Counters.Counter;
 
-    address payable user_address;
-    address dapp_store;
-    bool is_publisher;
-    address[] purchased_apps;
-    address[] created_apps;
-    mapping (address => uint) app_ratings;
-    mapping (address => uint) downloaded_apps;
-
+    address payable private user_address;
+    bool isPublisher;
+    address[] private purchasedApps;
+    address[] private createdApps;
+    mapping (address => bool) private ownedApps;
+    mapping (address => uint) private appRatings;
+    mapping (address => uint) private downloaded_apps;
+    Counters.Counter appsRated;
     constructor(address new_user_address){
-        dapp_store = msg.sender;
         user_address = payable(new_user_address);
-        is_publisher = false;
-        emit Events.UserCreated(user_address, address(this), dapp_store);
+        isPublisher = false;
+        appsRated.reset();
     }
 
     //Validation
-    modifier validateDappStore() {
-        require(dapp_store == msg.sender);
-        _;
-    }
-
-    modifier validateID(uint _id){
-        require(_id > 0);
-        _;
-    }
-
     modifier validateRating(uint _rating){
         require(_rating > 0);
         _;
     }
 
     //Getters
-    function getPurchasedApps() view external onlyOwner returns(AppInfoLibrary.AppInfo[] memory){
-        uint len = purchased_apps.length;
-        AppInfoLibrary.AppInfo[] memory purchased_apps_info = new AppInfoLibrary.AppInfo[](len);
-        for (uint i = 0; i < len; i++){
-            App _app = App(purchased_apps[i]);
-            purchased_apps_info[i] = _app.getAppInfo(true);
-        }
-        return purchased_apps_info;
+    function isAppOwned(address app_address) external view  onlyOwner returns(bool){
+        return ownedApps[app_address];
+    }
+        
+    function getRatingForApp(address app) view public onlyOwner returns(uint){
+        return appRatings[app];
     }
 
-    function getCreatedApps() view external onlyOwner returns(AppInfoLibrary.AppInfo[] memory){
-        uint len = created_apps.length;
-        AppInfoLibrary.AppInfo[] memory created_apps_info = new AppInfoLibrary.AppInfo[](len);
+    function getPurchasedApps() view external onlyOwner returns(AppInfoLibrary.AppInfo[] memory){
+        uint len = purchasedApps.length;
+        AppInfoLibrary.AppInfo[] memory purchasedApps_info = new AppInfoLibrary.AppInfo[](len);
         for (uint i = 0; i < len; i++){
-            App _app = App(created_apps[i]);
-            created_apps_info[i] = _app.getAppInfo(true);
+            App _app = App(purchasedApps[i]);
+            purchasedApps_info[i] = _app.getAppInfo(true, getRatingForApp(purchasedApps[i]));
         }
-        return created_apps_info;
+        return purchasedApps_info;
+    }
+
+    function getPublishedApps() view external onlyOwner returns(AppInfoLibrary.AppInfo[] memory){
+        uint len = createdApps.length;
+        AppInfoLibrary.AppInfo[] memory publishedAppsInfo = new AppInfoLibrary.AppInfo[](len);
+        for (uint i = 0; i < len; i++){
+            App _app = App(createdApps[i]);
+            publishedAppsInfo[i] = _app.getAppInfo(true, getRatingForApp(createdApps[i]));
+        }
+        return publishedAppsInfo;
     }
 
     function getRatedApps() view external onlyOwner returns(AppInfoLibrary.AppInfo[] memory){
-        uint len = purchased_apps.length;
+        uint len = appsRated.current();
         AppInfoLibrary.AppInfo[] memory rated_apps_info = new AppInfoLibrary.AppInfo[](len);
         for (uint i = 0; i < len; i++){
-            App _app = App(purchased_apps[i]);
-            rated_apps_info[i] = _app.getAppInfo(true);
+            address app_address = purchasedApps[i];
+            App _app = App(app_address);
+            if (appRatings[app_address] > 0){
+                rated_apps_info[i] = _app.getAppInfo(true, getRatingForApp(purchasedApps[i]));
+            }
         }
         return rated_apps_info;
     }
 
-    function getRatingForApp(address app) view external onlyOwner returns(uint){
-        return app_ratings[app];
-    }
-
-    function isAppPurchased(address _app) view external onlyOwner returns(bool){
-        for (uint i = 0; i < purchased_apps.length; i++){
-            if (_app.isEqual(purchased_apps[i])){
-                return true;
-            }
-        }
-        return false;
-    }
-
     //Updaters
-    function creatApp(address app) external onlyOwner{
-        is_publisher = true;
-        created_apps.push(app);
-        purchased_apps.push(app);
+    function createNewApp(address app) external onlyOwner{
+        isPublisher = true;
+        createdApps.push(app);
+        markAppAsPurchased(app);
     }
 
     function rateApp(address app, uint app_rating) external onlyOwner{
         require(app_rating >=1 && app_rating <=5);
-        app_ratings[app] = app_rating;
-    }
-
-    function purchaseApp(address app_address) external onlyOwner{
-        purchased_apps.push(app_address);
-    }
-
-    function isAppOwned(address app_address) external view  onlyOwner returns(bool){
-        for (uint i=0; i < purchased_apps.length; i++){
-            if (purchased_apps[i].isEqual(app_address)){
-                return true;
-            }
+        if (appRatings[app] == 0){
+            appsRated.increment();
         }
-        return false;
+        appRatings[app] = app_rating;
     }
+
+    function markAppAsPurchased(address app_address) public onlyOwner{
+        purchasedApps.push(app_address);
+        ownedApps[app_address] = true;
+    }
+
+
 }
