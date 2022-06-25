@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.14;
+pragma solidity ^0.8.15;
 import {App} from './app.sol';
 import {Constants, Events, StringUtils, AddressUtils} from './dappstore_utils.sol';
 import {AppInfoLibrary} from './AppInfoLibrary.sol';

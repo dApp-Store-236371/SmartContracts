@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.14;
+pragma solidity ^0.8.15;
 import {User} from './user.sol';
 import {App} from './app.sol';
 import {Constants, Events, StringUtils, AddressUtils} from './dappstore_utils.sol';
@@ -164,7 +164,6 @@ contract dAppstore {
                 owned, 
                getUserRatingForApp(app_id)
             );
-            // emit Events.AppInfo(batch[i]);
         }
         return batch;
     }
@@ -193,8 +192,7 @@ contract dAppstore {
             AppInfoLibrary.AppInfo[] memory empty_app_arr;
             return  empty_app_arr;
         }
-        // AppInfoLibrary.AppInfo[] memory rated_apps_info = User(users[msg.sender]).getRatedApps();
-        // return rated_apps_info;
+
         return User(users[msg.sender]).getRatedApps();
     }
 
@@ -227,15 +225,6 @@ contract dAppstore {
         user.rateApp(app_address, new_rating);
         (uint rating_int, uint rating_modulu, uint num_ratings) = curr_app.rateApp(new_rating, old_rating);
         emit Events.AppRated(_app_id, rating_int, rating_modulu, num_ratings);
-
-        // uint curr_rating_num = curr_app.num_ratings();
-        // if (curr_rating_num == 0){
-        //     curr_app.rateApp(0, 0, _rating);
-        // }
-        // else if (curr_rating_num > Constants.RATING_THRESHHOLD){
-        //     (uint curr_rating_int, uint curr_rating_modulu) = curr_app.getAppRating();
-        //     curr_app.rateApp(curr_rating_int, curr_rating_modulu, _rating);
-        // }
     }
 
     // function changeBuckets(App app, uint from, uint to) pure private returns(bool){
