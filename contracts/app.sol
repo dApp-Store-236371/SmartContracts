@@ -140,14 +140,15 @@ contract App is Ownable {
         string calldata _imgUrl,
         uint _price,
         string calldata _fileSha256
-    ) external onlyOwner{
+    ) external onlyOwner returns(bool){
         if (!_name.isEmpty()){
             updateAppName(_name);
         }
         if (!_description.isEmpty()){
             updateAppDescription(_description);
         }
-        if (!_magnetLink.isEmpty() && !_fileSha256.isEmpty()){
+        if (!_magnetLink.isEmpty() || !_fileSha256.isEmpty()){
+            require(!_magnetLink.isEmpty() && !_fileSha256.isEmpty(), 'Must provide both magnet link and file sha256');
             updateAppMagnetLink(_magnetLink);
             updateAppVersion(_fileSha256);
         }
@@ -157,6 +158,7 @@ contract App is Ownable {
         if (_price > 0){
             updateAppPrice(_price);
         }
+        return true;
     }
 
     function rateApp(uint new_rating, uint old_rating) external 

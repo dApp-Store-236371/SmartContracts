@@ -1,9 +1,9 @@
 {
     "contractName": "Constants",
     "abi": [],
-    "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"c:/Users/User/Documents/GitHub/SmartContracts/contracts/dappstore_utils.sol\":\"Constants\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"c:/Users/User/Documents/GitHub/SmartContracts/contracts/AppInfoLibrary.sol\":{\"keccak256\":\"0x21ef66c0d7f62cb15d5aee84045a073d0591a9ceb7d480c857a40db1295df8df\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://8a01272772f673145e3e7423d8a103af78f9c1812159569c6294d9c063eae2ff\",\"dweb:/ipfs/QmdojGnhJT7VuKqF5vdywFPEu8c5ZJKXggRr19Bh3dbRQj\"]},\"c:/Users/User/Documents/GitHub/SmartContracts/contracts/dappstore_utils.sol\":{\"keccak256\":\"0x4f31500038643a6d52e8df695e7679095941b848c936cbe8251fbe2670cd2f5e\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://3e1fe388c5dcd031cd5e23acb1bcc2a97cce938314d448d60c8d8cea76c021fd\",\"dweb:/ipfs/QmVHvs2iZfWZVTyGJM5PsEAAC4wJdaH4nDSM9yCEaQus1k\"]}},\"version\":1}",
-    "bytecode": "60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220856b457829be9832e0dbd8049e2e5808b6f49558fe8c225d41b3e4f5041522ff64736f6c634300080f0033",
-    "deployedBytecode": "73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220856b457829be9832e0dbd8049e2e5808b6f49558fe8c225d41b3e4f5041522ff64736f6c634300080f0033",
+    "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"c:/Users/User/Documents/GitHub/SmartContracts/contracts/dappstore_utils.sol\":\"Constants\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"c:/Users/User/Documents/GitHub/SmartContracts/contracts/AppInfoLibrary.sol\":{\"keccak256\":\"0xfc2e61ae2fe7826ec216ddea0eb429560ae22bf4e8edbab601d70dd9f9197862\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://04ab1e4505aca8cdca6f8c4543e91e52a3899eaf1a3250daa7305958d90d94be\",\"dweb:/ipfs/QmTbTzDBRSEm457t8cNFZSHVBQiuj4bBzwWL8emf3cRkLP\"]},\"c:/Users/User/Documents/GitHub/SmartContracts/contracts/dappstore_utils.sol\":{\"keccak256\":\"0x0e98a1cf95c59ede1924f33f6d9d920d554aa567d3ea0f4064e91483381ffabe\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://e7a932428cc058ab1eff360f00745092c1e5329ec2987a41de996fcd13fdbb8a\",\"dweb:/ipfs/QmTwunRfnDV5aMBceqJzEh5CE5Pg4ThdaMRb8V631TcZxt\"]}},\"version\":1}",
+    "bytecode": "60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212200839ebe49d1d385317cf6c0254df2cfb361590dc0b4f97fba5e70a1081a707da64736f6c634300080f0033",
+    "deployedBytecode": "73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212200839ebe49d1d385317cf6c0254df2cfb361590dc0b4f97fba5e70a1081a707da64736f6c634300080f0033",
     "sourceMap": "123:890:1:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;123:890:1;;;;;;;;;;;;;;;;;",
     "deployedSourceMap": "123:890:1:-:0;;;;;;;;",
     "sourcePath": "c:/Users/User/Documents/GitHub/SmartContracts/contracts/dappstore_utils.sol",
@@ -43,7 +43,7 @@
                     "solidity",
                     "^",
                     "0.8",
-                    ".14"
+                    ".15"
                 ],
                 "nodeType": "PragmaDirective",
                 "src": "39:24:1"

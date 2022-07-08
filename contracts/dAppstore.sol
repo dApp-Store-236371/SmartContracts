@@ -58,6 +58,7 @@ contract dAppstore {
     modifier validIndex(uint _index, uint _length){
         require(_index >= 0, 'Invalid index');
         require(_length > 0, 'Invalid length');
+        require(_index < _length, 'Invalid index');
         _;
     }
 
@@ -113,11 +114,10 @@ contract dAppstore {
         string memory _description,
         string memory _magnetLink,
         string memory _imgUrl,
-        // string memory _company,
         uint _price,
         string memory _fileSha256
     ) external userExists(msg.sender) appExists(app_id) onlyCreator(app_id, msg.sender) {
-        App(apps.get(app_id)).updateApp(
+        bool success = App(apps.get(app_id)).updateApp(
             _name,
             _description,
             _magnetLink,
@@ -125,12 +125,11 @@ contract dAppstore {
             _price,
             _fileSha256
         );
-        emit Events.UpdatedApp(app_id);
+        if (success){
+            emit Events.UpdatedApp(app_id);
+        }
     }
 
-
-
-    //todo: Add appnotopwned into purchaseApp
     function purchaseApp(uint app_id) external payable appExists(app_id) { //todo: check this validate
         address user = msg.sender;
         if (users[user].isAddressZero()){
@@ -148,8 +147,6 @@ contract dAppstore {
         // require(false, 'DEBUG MESSAGE');
     }
 
-
-    // //todo: return app info via struct instead of addresses
     function getAppBatch(uint start, uint len) view external validIndex(start, len) returns( AppInfoLibrary.AppInfo[] memory){
         bool registered = !users[msg.sender].isAddressZero();
         uint apps_length = apps.length();
@@ -200,11 +197,11 @@ contract dAppstore {
         return apps.length();
     }
 
-    function getAppRating(uint _app_id) view external appExists(_app_id) returns(uint, uint, uint){
-        App app = App(apps.get(_app_id));
-        (uint rating_int, uint rating_modulu) = app.getAppRating();
-        return (rating_int, rating_modulu, app.num_ratings());
-    }
+    // function getAppRating(uint _app_id) view external appExists(_app_id) returns(uint, uint, uint){
+    //     App app = App(apps.get(_app_id));
+    //     (uint rating_int, uint rating_modulu) = app.getAppRating();
+    //     return (rating_int, rating_modulu, app.num_ratings());
+    // }
 
     function getUserRatingForApp(uint _app_id) view public appExists(_app_id) returns(uint){
         if (users[msg.sender].isAddressZero()){
