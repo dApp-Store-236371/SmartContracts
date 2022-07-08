@@ -12,5 +12,49 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
 contract AppManager is Ownable{
+    constructor(){
 
+    }
+
+    // Modifiers:
+
+
+    // Getters:
+    function getApp(uint _appId) private view returns (address){
+        
+    }
+
+    function getAppBatch(uint start, uint length) external view returns (AppInfoLibrary.AppInfo[] memory){
+        
+    }
+        
+    function getAppCount() external view returns (uint){
+        
+    }
+
+    // Create and modify apps:
+    function createApp(
+        string memory _name, 
+        string memory _description, 
+        string memory _image,
+        string memory _url) external returns(uint _appId){
+        
+    }
+
+    function updateApp(
+        uint _appId, 
+        string memory _name, 
+        string memory _description, 
+        string memory _image,
+        string memory _url) external returns(bool _success){
+        
+    }
+
+    // App rating:
+    function rateApp(
+        uint _appId, 
+        uint _rating) external returns(bool _success){
+        
+    }
+    
 }
