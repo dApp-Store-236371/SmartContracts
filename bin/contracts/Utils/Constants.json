@@ -1,0 +1,282 @@
+{
+    "contractName": "Constants",
+    "abi": [],
+    "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"c:/Users/User/Documents/GitHub/SmartContracts/contracts/Utils/Constants.sol\":\"Constants\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"c:/Users/User/Documents/GitHub/SmartContracts/contracts/Utils/Constants.sol\":{\"keccak256\":\"0x08dcdf44c804ad5e267e81446ebd325135eadef7ab094963ff97d5875ec964b2\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://54f7da49dcd36f1d237e646242d8e1e82be76d30f2e26ecbd5ceb3ced1ab14a1\",\"dweb:/ipfs/QmexV1XUNFvdBmcCiyqF5hvrrr5mMRxnpfBHVcCrJFYQBL\"]}},\"version\":1}",
+    "bytecode": "60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220e6956da5c01a943328f9f69f37dfe11ba431cb66b69819b2c073cd388cf402f064736f6c634300080f0033",
+    "deployedBytecode": "73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220e6956da5c01a943328f9f69f37dfe11ba431cb66b69819b2c073cd388cf402f064736f6c634300080f0033",
+    "sourceMap": "67:890:0:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;67:890:0;;;;;;;;;;;;;;;;;",
+    "deployedSourceMap": "67:890:0:-:0;;;;;;;;",
+    "sourcePath": "c:/Users/User/Documents/GitHub/SmartContracts/contracts/Utils/Constants.sol",
+    "compiler": {
+        "name": "solc",
+        "version": "0.8.15+commit.e14f2714"
+    },
+    "ast": {
+        "absolutePath": "c:/Users/User/Documents/GitHub/SmartContracts/contracts/Utils/Constants.sol",
+        "exportedSymbols": {
+            "Constants": [
+                17
+            ]
+        },
+        "id": 18,
+        "license": "UNLICENSED",
+        "nodeType": "SourceUnit",
+        "nodes": [
+            {
+                "id": 1,
+                "literals": [
+                    "solidity",
+                    "^",
+                    "0.8",
+                    ".15"
+                ],
+                "nodeType": "PragmaDirective",
+                "src": "39:24:0"
+            },
+            {
+                "abstract": false,
+                "baseContracts": [],
+                "canonicalName": "Constants",
+                "contractDependencies": [],
+                "contractKind": "library",
+                "fullyImplemented": true,
+                "id": 17,
+                "linearizedBaseContracts": [
+                    17
+                ],
+                "name": "Constants",
+                "nameLocation": "75:9:0",
+                "nodeType": "ContractDefinition",
+                "nodes": [
+                    {
+                        "constant": true,
+                        "id": 4,
+                        "mutability": "constant",
+                        "name": "DEFAULT_EMPTY",
+                        "nameLocation": "108:13:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 17,
+                        "src": "92:34:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_string_memory_ptr",
+                            "typeString": "string"
+                        },
+                        "typeName": {
+                            "id": 2,
+                            "name": "string",
+                            "nodeType": "ElementaryTypeName",
+                            "src": "92:6:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_string_storage_ptr",
+                                "typeString": "string"
+                            }
+                        },
+                        "value": {
+                            "hexValue": "",
+                            "id": 3,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "string",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "124:2:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_stringliteral_c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+                                "typeString": "literal_string \"\""
+                            },
+                            "value": ""
+                        },
+                        "visibility": "internal"
+                    },
+                    {
+                        "constant": true,
+                        "id": 7,
+                        "mutability": "constant",
+                        "name": "UNRATED",
+                        "nameLocation": "147:7:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 17,
+                        "src": "133:25:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                        },
+                        "typeName": {
+                            "id": 5,
+                            "name": "uint",
+                            "nodeType": "ElementaryTypeName",
+                            "src": "133:4:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                            }
+                        },
+                        "value": {
+                            "hexValue": "30",
+                            "id": 6,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "number",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "157:1:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                            },
+                            "value": "0"
+                        },
+                        "visibility": "internal"
+                    },
+                    {
+                        "constant": true,
+                        "id": 10,
+                        "mutability": "constant",
+                        "name": "DEFAULT_APP_IMAGE",
+                        "nameLocation": "181:17:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 17,
+                        "src": "165:187:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_string_memory_ptr",
+                            "typeString": "string"
+                        },
+                        "typeName": {
+                            "id": 8,
+                            "name": "string",
+                            "nodeType": "ElementaryTypeName",
+                            "src": "165:6:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_string_storage_ptr",
+                                "typeString": "string"
+                            }
+                        },
+                        "value": {
+                            "hexValue": "68747470733a2f2f65787465726e616c2d636f6e74656e742e6475636b6475636b676f2e636f6d2f69752f3f753d6874747073253341253246253246692e70696e696d672e636f6d2532466f726967696e616c7325324632302532463065253246663825324632303065663832623331383266663735626630623264653534393665363163662e6a706726663d31266e6f66623d31",
+                            "id": 9,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "string",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "201:151:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_stringliteral_ddc88163facf55c338519e9695c87d07a6836b5933b3b31a1c4d3dbcd567824e",
+                                "typeString": "literal_string \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F20%2F0e%2Ff8%2F200ef82b3182ff75bf0b2de5496e61cf.jpg&f=1&nofb=1\""
+                            },
+                            "value": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F20%2F0e%2Ff8%2F200ef82b3182ff75bf0b2de5496e61cf.jpg&f=1&nofb=1"
+                        },
+                        "visibility": "internal"
+                    },
+                    {
+                        "constant": true,
+                        "id": 13,
+                        "mutability": "constant",
+                        "name": "DEFAULT_APP_MAGNET_LINK",
+                        "nameLocation": "375:23:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 17,
+                        "src": "359:552:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_string_memory_ptr",
+                            "typeString": "string"
+                        },
+                        "typeName": {
+                            "id": 11,
+                            "name": "string",
+                            "nodeType": "ElementaryTypeName",
+                            "src": "359:6:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_string_storage_ptr",
+                                "typeString": "string"
+                            }
+                        },
+                        "value": {
+                            "hexValue": "6d61676e65743a3f78743d75726e3a627469683a3038616461356137613631383361616531653039643833316466363734386435363630393561313026646e3d53696e74656c2674723d7564702533412532462532466578706c6f6469652e6f7267253341363936392674723d756470253341253246253246747261636b65722e636f707065727375726665722e746b253341363936392674723d756470253341253246253246747261636b65722e656d706972652d6a732e7573253341313333372674723d756470253341253246253246747261636b65722e6c656563686572732d70617261646973652e6f7267253341363936392674723d756470253341253246253246747261636b65722e6f70656e747261636b722e6f7267253341313333372674723d777373253341253246253246747261636b65722e62746f7272656e742e78797a2674723d777373253341253246253246747261636b65722e66617374636173742e6e7a2674723d777373253341253246253246747261636b65722e6f70656e776562746f7272656e742e636f6d2677733d6874747073253341253246253246776562746f7272656e742e696f253246746f7272656e74732532462678733d6874747073253341253246253246776562746f7272656e742e696f253246746f7272656e747325324673696e74656c2e746f7272656e74",
+                            "id": 12,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "string",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "401:510:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_stringliteral_8863b835fe75511937ff7808e957d245ad768ed99d9161d81a178a117f988f3c",
+                                "typeString": "literal_string \"magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent\""
+                            },
+                            "value": "magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent"
+                        },
+                        "visibility": "internal"
+                    },
+                    {
+                        "constant": true,
+                        "id": 16,
+                        "mutability": "constant",
+                        "name": "RATING_THRESHHOLD",
+                        "nameLocation": "932:17:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 17,
+                        "src": "918:35:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                        },
+                        "typeName": {
+                            "id": 14,
+                            "name": "uint",
+                            "nodeType": "ElementaryTypeName",
+                            "src": "918:4:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                            }
+                        },
+                        "value": {
+                            "hexValue": "30",
+                            "id": 15,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "number",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "952:1:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                            },
+                            "value": "0"
+                        },
+                        "visibility": "internal"
+                    }
+                ],
+                "scope": 18,
+                "src": "67:890:0",
+                "usedErrors": []
+            }
+        ],
+        "src": "39:918:0"
+    },
+    "functionHashes": {},
+    "gasEstimates": {
+        "creation": {
+            "codeDepositCost": "17200",
+            "executionCost": "103",
+            "totalCost": "17303"
+        }
+    }
+}

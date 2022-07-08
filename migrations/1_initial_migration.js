@@ -8,6 +8,8 @@ const AppInfoLibrary = artifacts.require("AppInfoLibrary");
 const App = artifacts.require("App");
 const User = artifacts.require("User");
 const dAppstore = artifacts.require("dAppstore");
+const AppManager = artifacts.require("AppManager");
+const UserManager = artifacts.require("UserManager");
 
 
 module.exports = function (deployer) {
@@ -24,5 +26,7 @@ module.exports = function (deployer) {
   deployer.link(AddressUtils, [App, User, dAppstore]);
   deployer.link(AddressPayableUtils, [App, User, dAppstore]);
   deployer.link(AppInfoLibrary, [App, User, dAppstore]);
+  deployer.deploy(AppManager);
+  deployer.deploy(UserManager);
   deployer.deploy(dAppstore);
 };
