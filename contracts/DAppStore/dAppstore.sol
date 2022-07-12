@@ -102,38 +102,38 @@ contract dAppstore {
         );
         apps.set(apps_num, address(new_app));
         User(users[msg.sender]).createNewApp(address(new_app));
-        emit Events.AppCreated(
-            apps_num, 
-            payable(msg.sender),
-            _name,
-            _company,
-            _category,
-            _price,
-            _description
-        );
+        // emit Events.AppCreated(
+        //     apps_num, 
+        //     payable(msg.sender),
+        //     _name,
+        //     _company,
+        //     _category,
+        //     _price,
+        //     _description
+        // );
     }
 
-    function updateApp(
-        uint app_id,
-        string memory _name,
-        string memory _description,
-        string memory _magnetLink,
-        string memory _imgUrl,
-        uint _price,
-        string memory _fileSha256
-    ) external userExists(msg.sender) appExists(app_id) onlyCreator(app_id, msg.sender) {
-        bool success = App(apps.get(app_id)).updateApp(
-            _name,
-            _description,
-            _magnetLink,
-            _imgUrl,
-            _price,
-            _fileSha256
-        );
-        if (success){
-            emit Events.UpdatedApp(app_id);
-        }
-    }
+    // function updateApp(
+    //     uint app_id,
+    //     string memory _name,
+    //     string memory _description,
+    //     string memory _magnetLink,
+    //     string memory _imgUrl,
+    //     uint _price,
+    //     string memory _fileSha256
+    // ) external userExists(msg.sender) appExists(app_id) onlyCreator(app_id, msg.sender) {
+    //     bool success = App(apps.get(app_id)).updateApp(
+    //         _name,
+    //         _description,
+    //         _magnetLink,
+    //         _imgUrl,
+    //         _price,
+    //         _fileSha256
+    //     );
+    //     if (success){
+    //         emit Events.UpdatedApp(app_id);
+    //     }
+    // }
 
     function purchaseApp(uint app_id) external payable appExists(app_id) { //todo: check this validate
         address user = msg.sender;
@@ -152,23 +152,23 @@ contract dAppstore {
         // require(false, 'DEBUG MESSAGE');
     }
 
-    function getAppBatch(uint start, uint len) view external validIndex(start, len) returns( AppInfoLibrary.AppInfo[] memory){
-        bool registered = !users[msg.sender].isAddressZero();
-        uint apps_length = apps.length();
-        uint requested_apps = (len < apps_length? len: apps_length);
-        AppInfoLibrary.AppInfo[] memory batch = new AppInfoLibrary.AppInfo[](requested_apps);
-        require (requested_apps <= len && requested_apps <= apps_length, "minimum failed");
-        for (uint i = 0; i < requested_apps; i++){
-            uint app_id = (start + i) % apps_length;
-            address app_address = apps.get(app_id);
-            bool owned = registered && User(users[msg.sender]).isAppOwned(app_address);
-            batch[i] = App(app_address).getAppInfo(
-                owned, 
-               getUserRatingForApp(app_id)
-            );
-        }
-        return batch;
-    }
+    // function getAppBatch(uint start, uint len) view external validIndex(start, len) returns( AppInfoLibrary.AppInfo[] memory){
+    //     bool registered = !users[msg.sender].isAddressZero();
+    //     uint apps_length = apps.length();
+    //     uint requested_apps = (len < apps_length? len: apps_length);
+    //     AppInfoLibrary.AppInfo[] memory batch = new AppInfoLibrary.AppInfo[](requested_apps);
+    //     require (requested_apps <= len && requested_apps <= apps_length, "minimum failed");
+    //     for (uint i = 0; i < requested_apps; i++){
+    //         uint app_id = (start + i) % apps_length;
+    //         address app_address = apps.get(app_id);
+    //         bool owned = registered && User(users[msg.sender]).isAppOwned(app_address);
+    //         batch[i] = App(app_address).getAppInfo(
+    //             owned, 
+    //            getUserRatingForApp(app_id)
+    //         );
+    //     }
+    //     return batch;
+    // }
 
     // Not registered user is going to see empty list
     function getPurchasedAppsInfo() external view returns(AppInfoLibrary.AppInfo[] memory){

@@ -15,15 +15,15 @@
     "absolutePath": "project:/contracts/Utils/Constants.sol",
     "exportedSymbols": {
       "Constants": [
-        4793
+        5019
       ]
     },
-    "id": 4794,
+    "id": 5020,
     "license": "UNLICENSED",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 4777,
+        "id": 5003,
         "literals": [
           "solidity",
           "^",
@@ -40,9 +40,9 @@
         "contractDependencies": [],
         "contractKind": "library",
         "fullyImplemented": true,
-        "id": 4793,
+        "id": 5019,
         "linearizedBaseContracts": [
-          4793
+          5019
         ],
         "name": "Constants",
         "nameLocation": "75:9:16",
@@ -50,12 +50,12 @@
         "nodes": [
           {
             "constant": true,
-            "id": 4780,
+            "id": 5006,
             "mutability": "constant",
             "name": "DEFAULT_EMPTY",
             "nameLocation": "108:13:16",
             "nodeType": "VariableDeclaration",
-            "scope": 4793,
+            "scope": 5019,
             "src": "92:34:16",
             "stateVariable": true,
             "storageLocation": "default",
@@ -64,7 +64,7 @@
               "typeString": "string"
             },
             "typeName": {
-              "id": 4778,
+              "id": 5004,
               "name": "string",
               "nodeType": "ElementaryTypeName",
               "src": "92:6:16",
@@ -75,7 +75,7 @@
             },
             "value": {
               "hexValue": "",
-              "id": 4779,
+              "id": 5005,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -93,12 +93,12 @@
           },
           {
             "constant": true,
-            "id": 4783,
+            "id": 5009,
             "mutability": "constant",
             "name": "UNRATED",
             "nameLocation": "147:7:16",
             "nodeType": "VariableDeclaration",
-            "scope": 4793,
+            "scope": 5019,
             "src": "133:25:16",
             "stateVariable": true,
             "storageLocation": "default",
@@ -107,7 +107,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 4781,
+              "id": 5007,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "133:4:16",
@@ -118,7 +118,7 @@
             },
             "value": {
               "hexValue": "30",
-              "id": 4782,
+              "id": 5008,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -136,12 +136,12 @@
           },
           {
             "constant": true,
-            "id": 4786,
+            "id": 5012,
             "mutability": "constant",
             "name": "DEFAULT_APP_IMAGE",
             "nameLocation": "181:17:16",
             "nodeType": "VariableDeclaration",
-            "scope": 4793,
+            "scope": 5019,
             "src": "165:187:16",
             "stateVariable": true,
             "storageLocation": "default",
@@ -150,7 +150,7 @@
               "typeString": "string"
             },
             "typeName": {
-              "id": 4784,
+              "id": 5010,
               "name": "string",
               "nodeType": "ElementaryTypeName",
               "src": "165:6:16",
@@ -161,7 +161,7 @@
             },
             "value": {
               "hexValue": "68747470733a2f2f65787465726e616c2d636f6e74656e742e6475636b6475636b676f2e636f6d2f69752f3f753d6874747073253341253246253246692e70696e696d672e636f6d2532466f726967696e616c7325324632302532463065253246663825324632303065663832623331383266663735626630623264653534393665363163662e6a706726663d31266e6f66623d31",
-              "id": 4785,
+              "id": 5011,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -179,12 +179,12 @@
           },
           {
             "constant": true,
-            "id": 4789,
+            "id": 5015,
             "mutability": "constant",
             "name": "DEFAULT_APP_MAGNET_LINK",
             "nameLocation": "375:23:16",
             "nodeType": "VariableDeclaration",
-            "scope": 4793,
+            "scope": 5019,
             "src": "359:552:16",
             "stateVariable": true,
             "storageLocation": "default",
@@ -193,7 +193,7 @@
               "typeString": "string"
             },
             "typeName": {
-              "id": 4787,
+              "id": 5013,
               "name": "string",
               "nodeType": "ElementaryTypeName",
               "src": "359:6:16",
@@ -204,7 +204,7 @@
             },
             "value": {
               "hexValue": "6d61676e65743a3f78743d75726e3a627469683a3038616461356137613631383361616531653039643833316466363734386435363630393561313026646e3d53696e74656c2674723d7564702533412532462532466578706c6f6469652e6f7267253341363936392674723d756470253341253246253246747261636b65722e636f707065727375726665722e746b253341363936392674723d756470253341253246253246747261636b65722e656d706972652d6a732e7573253341313333372674723d756470253341253246253246747261636b65722e6c656563686572732d70617261646973652e6f7267253341363936392674723d756470253341253246253246747261636b65722e6f70656e747261636b722e6f7267253341313333372674723d777373253341253246253246747261636b65722e62746f7272656e742e78797a2674723d777373253341253246253246747261636b65722e66617374636173742e6e7a2674723d777373253341253246253246747261636b65722e6f70656e776562746f7272656e742e636f6d2677733d6874747073253341253246253246776562746f7272656e742e696f253246746f7272656e74732532462678733d6874747073253341253246253246776562746f7272656e742e696f253246746f7272656e747325324673696e74656c2e746f7272656e74",
-              "id": 4788,
+              "id": 5014,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -222,12 +222,12 @@
           },
           {
             "constant": true,
-            "id": 4792,
+            "id": 5018,
             "mutability": "constant",
             "name": "RATING_THRESHHOLD",
             "nameLocation": "932:17:16",
             "nodeType": "VariableDeclaration",
-            "scope": 4793,
+            "scope": 5019,
             "src": "918:35:16",
             "stateVariable": true,
             "storageLocation": "default",
@@ -236,7 +236,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 4790,
+              "id": 5016,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "918:4:16",
@@ -247,7 +247,7 @@
             },
             "value": {
               "hexValue": "30",
-              "id": 4791,
+              "id": 5017,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -264,7 +264,7 @@
             "visibility": "internal"
           }
         ],
-        "scope": 4794,
+        "scope": 5020,
         "src": "67:890:16",
         "usedErrors": []
       }
@@ -277,7 +277,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-07-08T16:55:59.414Z",
+  "updatedAt": "2022-07-12T12:46:28.786Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

@@ -4,16 +4,16 @@ pragma solidity ^0.8.15;
 import {AppInfoLibrary} from './AppInfoLibrary.sol';
 
 library Events {
-    event AppCreated(
-        uint indexed id,
-        address payable indexed creator,
-        string name,
-        string company,
-        string category,
-        uint price, 
-        string description
-        //maybe more fields
-    );
+    // event AppCreated(
+    //     uint indexed id,
+    //     address payable indexed creator,
+    //     string name,
+    //     string company,
+    //     string category,
+    //     uint price, 
+    //     string description
+    //     //maybe more fields
+    // );
 
     event UserCreated(
         address payable indexed user_address,

@@ -16,6 +16,7 @@ contract App is Ownable {
     //App contract provides a data structure of an app and
     //an API to work with for external use
     using StringUtils for string;
+    using StringUtils for string;
 
     using Counters for Counters.Counter;
     using SafeMath for uint;
@@ -104,65 +105,64 @@ contract App is Ownable {
     }
 
     //updaters
-    function updateAppName(string calldata new_name) private validateString(new_name){
+    function updateAppName(string calldata new_name) external validateString(new_name){
         name = new_name;
     }
 
-    function updateAppDescription(string calldata new_description) private validateString(new_description){
+    function updateAppDescription(string calldata new_description) external validateString(new_description){
         description = new_description;
     }
 
-    function updateAppImgUrl(string calldata new_imgUrl) private validateString(new_imgUrl){
+    function updateAppImgUrl(string calldata new_imgUrl) external validateString(new_imgUrl){
         imgUrl = new_imgUrl;
     }
 
-    function updateAppMagnetLink(string calldata new_magnetLink) private validateString(new_magnetLink){
+    function updateAppVersion(string memory new_sha, string calldata new_magnetLink) external 
+    validateString(new_sha)
+    validateString(new_magnetLink){
         magnetLink = new_magnetLink;
-    }
-    function updateAppVersion(string memory new_sha) private validateString(new_sha) {
         fileSha256.push(new_sha);
     }
 
-    function updateAppCompany(string calldata new_company) private validateString(new_company){
-        company = new_company;
-    }
+    // function updateAppCompany(string calldata new_company) private validateString(new_company){
+    //     company = new_company;
+    // }
 
-    function updateAppPrice(uint new_price) private validatePrice(new_price){
+    function updateAppPrice(uint new_price) external validatePrice(new_price){
        price = new_price;
     }
 
 
-    function updateAppFileSha(string calldata new_filesha) private validateString(new_filesha){
-        fileSha256.push(new_filesha);
-    }
-
-    function updateApp(
-        string calldata _name,
-        string calldata _description,
-        string calldata _magnetLink,
-        string calldata _imgUrl,
-        uint _price,
-        string calldata _fileSha256
-    ) external onlyOwner returns(bool){
-        if (!_name.isEmpty()){
-            updateAppName(_name);
-        }
-        if (!_description.isEmpty()){
-            updateAppDescription(_description);
-        }
-        if (!_magnetLink.isEmpty() || !_fileSha256.isEmpty()){
-            require(!_magnetLink.isEmpty() && !_fileSha256.isEmpty(), 'Must provide both magnet link and file sha256');
-            updateAppMagnetLink(_magnetLink);
-            updateAppVersion(_fileSha256);
-        }
-        if (!_imgUrl.isEmpty()){
-            updateAppImgUrl(_imgUrl);
-        }
-        if (_price > 0){
-            updateAppPrice(_price);
-        }
-        return true;
-    }
+    // function updateApp(
+    //     string calldata _name,
+    //     string calldata _description,
+    //     string calldata _magnetLink,
+    //     string calldata _imgUrl,
+    //     uint _price,
+    //     string calldata _fileSha256
+    // ) external onlyOwner returns(bool){
+    //     bool updated = false;
+    //     if (!_name.isEmpty()){
+    //         updateAppName(_name);
+    //         updated = true;
+    //     }
+        // if (_description.isNotEmpty()){
+        //     updateAppDescription(_description);
+        // }
+        // if (_magnetLink.isNotEmpty() || _fileSha256.isNotEmpty()){
+        //     // require(_magnetLink.isNotEmpty() && _fileSha256.isNotEmpty(), StringUtils.append(_magnetLink.getVariableMessage("magnet link"), _fileSha256.getVariableMessage("file sha256")));
+        //     require(_magnetLink.isNotEmpty() && _fileSha256.isNotEmpty(), 'Must provide both magnet link and file sha256');
+        //     updateAppMagnetLink(_magnetLink);
+        //     updateAppVersion(_fileSha256);
+        // }
+        // if (_imgUrl.isNotEmpty()){
+        //     updateAppImgUrl(_imgUrl);
+        // }
+        // if (_price > 0){
+        //     updateAppPrice(_price);
+        // }
+    //     return updated;
+    // }
 
     function rateApp(uint new_rating, uint old_rating) external 
     onlyOwner 
@@ -199,6 +199,29 @@ contract App is Ownable {
             getCurrentVersion(),
             owned,
             owned? magnetLink: '',
+            category,
+            publishTime
+        );
+        return app_info;
+    }
+
+    
+    function getAppInfo() view external returns(AppInfoLibrary.AppInfo memory){
+        // (uint rating, uint rating_modulu) = _app.getAppRating();
+        AppInfoLibrary.AppInfo memory app_info = AppInfoLibrary.AppInfo(
+            id,
+            name,
+            description,
+            imgUrl,
+            company,
+            price,
+            num_ratings.current(),
+            rating_int,
+            rating_modulu,
+            0,
+            getCurrentVersion(),
+            false,
+            '',
             category,
             publishTime
         );

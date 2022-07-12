@@ -9,7 +9,7 @@ const App = artifacts.require("App");
 const User = artifacts.require("User");
 const dAppstore = artifacts.require("dAppstore");
 const AppManager = artifacts.require("./Apps/AppManager");
-const UserManager = artifacts.require("UserManager");
+const UserManager = artifacts.require("./Users/UserManager");
 
 
 module.exports = function (deployer) {
@@ -20,12 +20,12 @@ module.exports = function (deployer) {
   deployer.deploy(AddressUtils);
   deployer.deploy(AddressPayableUtils);
   deployer.deploy(AppInfoLibrary);
-  deployer.link(Constants, [App, User, dAppstore]);
-  deployer.link(Events, [App, User, dAppstore]);
-  deployer.link(StringUtils, [App, User, dAppstore]);
-  deployer.link(AddressUtils, [App, User, dAppstore]);
-  deployer.link(AddressPayableUtils, [App, User, dAppstore]);
-  deployer.link(AppInfoLibrary, [App, User, dAppstore]);
+  deployer.link(Constants, [App, User,AppManager, UserManager, dAppstore]);
+  deployer.link(Events, [App, User,AppManager, UserManager, dAppstore]);
+  deployer.link(StringUtils, [App, User,AppManager, UserManager, dAppstore]);
+  deployer.link(AddressUtils, [App, User,AppManager, UserManager, dAppstore]);
+  deployer.link(AddressPayableUtils, [App, User,AppManager, UserManager, dAppstore]);
+  deployer.link(AppInfoLibrary, [App, User,AppManager, UserManager, dAppstore]);
   deployer.deploy(AppManager);
   deployer.deploy(UserManager);
   deployer.deploy(dAppstore);

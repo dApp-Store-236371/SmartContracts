@@ -1,32 +1,34 @@
-const { expect } = require('chai');
+const { expect, assert } = require('chai');
 const BN = require('bn.js');
+const { expectRevert } = require('@openzeppelin/test-helpers');
+const { link } = require('ethereum-waffle');
 const App = artifacts.require("App");
-const DEBUG = true;
+let catchRevert = require('./exceptions.js').catchRevert;
+
+function calcRating(rating_int, rating_modulu, num_ratings){
+  // console.log(`ratingInt: ${rating_int} ratingModulu: ${rating_modulu} numRating: ${num_ratings}`);
+  if (num_ratings == 0 ) {
+    return 0;
+  }
+  return rating_int + rating_modulu / num_ratings;
+}
+
+function ArrayAverage(array){
+  let length = 0;
+  let sum = 0;  
+  for (let i = 0; i < array.length; i++) {
+    sum += array[i];
+    if (array[i] > 0){
+      length++;
+    }
+}
+console.log(`length: ${length} sum: ${sum} values: ${array}`);
+return sum / length;
+}
+
 // Start test block
 contract('App contract', (accounts) => {
   let app;
-  // console.log(`number of accounts: ${accounts.length}`);
-  function calcRating(rating_int, rating_modulu, num_ratings){
-    // console.log(`ratingInt: ${rating_int} ratingModulu: ${rating_modulu} numRating: ${num_ratings}`);
-    if (num_ratings == 0 ) {
-      return 0;
-    }
-    return rating_int + rating_modulu / num_ratings;
-  }
-  
-  function ArrayAverage(array){
-    let length = 0;
-    let sum = 0;  
-    for (let i = 0; i < array.length; i++) {
-      sum += array[i];
-      if (array[i] > 0){
-        length++;
-      }
-  }
-  console.log(`length: ${length} sum: ${sum} values: ${array}`);
-  return sum / length;
-  }
-
   beforeEach(async function () {
       const fileSha = "fileSha0";
       const price = 8;
@@ -51,36 +53,8 @@ contract('App contract', (accounts) => {
       category,
       fileSha
     );
-
-
   });
 
-  // Test case for app updates
-  it("updates all  fields", async () => { 
-    const new_fileSha = "new filesha";
-    const new_name = "new name";
-    const new_description = "new description";
-    const new_img = "new img";
-    const new_link = "new link";
-    const new_price = 9;
-    await app.updateApp(
-      new_name,
-      new_description,
-      new_link,
-      new_img,
-      new_price,
-      new_fileSha
-    )
-
-    expect(await app.name()).to.equal(new_name);
-    expect(await app.description()).to.equal(new_description);
-    expect(await app.imgUrl()).to.equal(new_img);
-    expect(await app.magnetLink()).to.equal(new_link);
-    expect(await app.getCurrentVersion()).to.equal(new_fileSha);
-    const price = await app.price.call()
-    console.log(typeof price.toNumber());
-    expect(price.toNumber()).to.equal(new_price);
-  });
 
   it('test rating updates', async () => {
     console.log(`number of accounts: ${accounts.length}`);
@@ -97,10 +71,10 @@ contract('App contract', (accounts) => {
       const user = Math.floor(Math.random() *10);
       await app.rateApp(new_rating, user_rating[user]); // account i rates rnd from 0
       user_rating[user] = new_rating;
-      console.log(new_rating, i, user_rating);
+      // console.log(new_rating, i, user_rating);
     }
 
-    appInfo = await app.getAppInfo.call(true, 1);
+    appInfo = await app.getAppInfo();
     
     appRating = calcRating(parseInt(appInfo.ratingInt), parseInt(appInfo.ratingModulu), parseInt(appInfo.numRatings));
     //calculate average calue of array user_rating
@@ -111,6 +85,6 @@ contract('App contract', (accounts) => {
 
 
     
-  })
+  });
 })
 
