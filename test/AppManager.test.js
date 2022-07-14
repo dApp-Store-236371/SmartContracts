@@ -97,7 +97,7 @@ async function createXApps(appManager, x_apps, user_address){
 }
 
 function calcRating(ratingInt, ratingModulu, ratingNum){
-    return ratingNum == 0? 0: (ratingModulu / ratingNum) + ratingInt;
+    return parseInt(ratingNum) === 0? 0: (parseInt(ratingModulu) / parseInt(ratingNum)) + parseInt(ratingInt);
 }
 
 // Start test block
@@ -191,7 +191,7 @@ contract('AppManager', (accounts) => {
         assert.isDefined(appOwned, "app is not defined");
         assert.isTrue(expectAppInfo(appOwned, 0), "app info is not correct");
 
-        const appNotOwned = await appManager.getAppBatch().then(res => res[0]);
+        const appNotOwned = await appManager.getAppBatch(0, 1).then(res => res[0]);
         assert.isDefined(appNotOwned, "app is not defined");
         assert.isTrue(expectAppInfo(appNotOwned, 0), "app info is not correct");
     });
@@ -412,7 +412,7 @@ contract('AppManager', (accounts) => {
         const new_rating = Math.floor(Math.random() * 5 + 1);
         const tx = await appManager.rateApp(app.id, new_rating, 0);
         const updated_app = await appManager.getAppBatch(0, 1).then(res => res[0]);
-        expect(updated_app.rating).to.equal(new_rating.toString());
+        expect(calcRating(updated_app.ratingInt, updated_app.ratingModulu, updated_app.numRatings)).to.equal(new_rating);
     });
 
 });

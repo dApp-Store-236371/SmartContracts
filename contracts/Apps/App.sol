@@ -124,45 +124,9 @@ contract App is Ownable {
         fileSha256.push(new_sha);
     }
 
-    // function updateAppCompany(string calldata new_company) private validateString(new_company){
-    //     company = new_company;
-    // }
-
     function updateAppPrice(uint new_price) external validatePrice(new_price){
        price = new_price;
     }
-
-
-    // function updateApp(
-    //     string calldata _name,
-    //     string calldata _description,
-    //     string calldata _magnetLink,
-    //     string calldata _imgUrl,
-    //     uint _price,
-    //     string calldata _fileSha256
-    // ) external onlyOwner returns(bool){
-    //     bool updated = false;
-    //     if (!_name.isEmpty()){
-    //         updateAppName(_name);
-    //         updated = true;
-    //     }
-        // if (_description.isNotEmpty()){
-        //     updateAppDescription(_description);
-        // }
-        // if (_magnetLink.isNotEmpty() || _fileSha256.isNotEmpty()){
-        //     // require(_magnetLink.isNotEmpty() && _fileSha256.isNotEmpty(), StringUtils.append(_magnetLink.getVariableMessage("magnet link"), _fileSha256.getVariableMessage("file sha256")));
-        //     require(_magnetLink.isNotEmpty() && _fileSha256.isNotEmpty(), 'Must provide both magnet link and file sha256');
-        //     updateAppMagnetLink(_magnetLink);
-        //     updateAppVersion(_fileSha256);
-        // }
-        // if (_imgUrl.isNotEmpty()){
-        //     updateAppImgUrl(_imgUrl);
-        // }
-        // if (_price > 0){
-        //     updateAppPrice(_price);
-        // }
-    //     return updated;
-    // }
 
     function rateApp(uint new_rating, uint old_rating) external 
     onlyOwner 
@@ -220,8 +184,8 @@ contract App is Ownable {
             rating_modulu,
             0,
             getCurrentVersion(),
-            false,
-            '',
+            true,
+            magnetLink,
             category,
             publishTime
         );

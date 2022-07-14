@@ -14,44 +14,93 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
 contract UserManager is Ownable{
-    constructor(){
+    using AddressUtils for address;
+    using AddressPayableUtils for address payable;
+    using Counters for Counters.Counter;
 
-    }
+    //user_address => user_contract
+    mapping(address => address) users;
+
+    constructor(){}
 
     // Modifiers:
+    modifier validAddress(address _user_address){
+        require(!_user_address.isAddressZero(), "Invalid user address");
+        _;
+    }
+
+    modifier validateUserExists(address _user_address){
+        require(!_user_address.isAddressZero(), "Invalid user address");
+        require(!users[_user_address].isAddressZero(), 'User not found');
+        _;
+    }
 
     // Getters:
-    function getUser(address _userAddress) private view{
-        
+    function userExists() public view
+    onlyOwner
+    validAddress(msg.sender)
+    returns (bool){
+        return !users[msg.sender].isAddressZero();
     }
 
-    function getPublishedApps(address _userAddress) external view returns (AppInfoLibrary.AppInfo[] memory){
-        
+    function getUser(address _userAddress) private view returns(address){
+        return users[_userAddress];
     }
 
-    function getPurchasedApps(address _userAddress) external view returns (AppInfoLibrary.AppInfo[] memory){
-        
+    function getPublishedApps() external view 
+    onlyOwner
+    validateUserExists(msg.sender)
+    returns (AppInfoLibrary.AppInfo[] memory){
+        AppInfoLibrary.AppInfo[] memory publishedAppsInfo = User(users[msg.sender]).getPublishedApps();
+        return publishedAppsInfo;
     }
 
-    function getRatedApps(address _userAddress) external view returns (AppInfoLibrary.AppInfo[] memory){
-        
+    function getPurchasedAppsInfo() external view
+    onlyOwner
+    validateUserExists(msg.sender)
+    returns(AppInfoLibrary.AppInfo[] memory){
+        AppInfoLibrary.AppInfo[] memory purchasedApps_info = User(users[msg.sender]).getPurchasedApps();
+        return purchasedApps_info;
     }
 
-    function getUserRating(address _userAddress, uint _appId) external view returns (uint _rating){
-        
+    function getRatedApps() external view
+    onlyOwner
+    validateUserExists(msg.sender)
+    returns (AppInfoLibrary.AppInfo[] memory){
+        AppInfoLibrary.AppInfo[] memory rated_apps_info = User(users[msg.sender]).getRatedApps();
+        return rated_apps_info;
+    }
+
+    function getUserRating(address _appAddrress) external view 
+    onlyOwner
+    validateUserExists(msg.sender)
+    returns (uint _rating){
+        return User(users[msg.sender]).getRatingForApp(_appAddrress);
     }
 
     // Create and modify users:
-    // creates new user, returns a string that is used as a user id/password
-    function createUser(address _userAddress) external returns(string memory){
-        
+    function createUser(string calldata key) external 
+    onlyOwner
+    validateUserExists(msg.sender){
+        require (!users[msg.sender].isAddressZero(), "User already exists");
+        users[msg.sender] = address(new User(payable(msg.sender), key));
     }
 
-    function createNewApp(address _userAddress, uint _appId) external returns(bool _success){
-        
+    function createNewApp(address _appAddress) external
+    onlyOwner
+    validateUserExists(msg.sender){
+        User(users[msg.sender]).createNewApp(_appAddress);
     }
 
-    function markAppAsPurchased(address _userAddress, uint _appId) external returns(bool _success){
-        
+    function markAppAsPurchased(address _appAddress) external
+    onlyOwner
+    validateUserExists(msg.sender){
+        User(users[msg.sender]).markAppAsPurchased(_appAddress);
+    }
+
+    function markAppAsRated(address _appAddress, uint _rating) external
+    onlyOwner
+    validateUserExists(msg.sender){
+        User(users[msg.sender]).rateApp(_appAddress, _rating);
     }
 }

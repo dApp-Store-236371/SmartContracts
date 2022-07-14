@@ -44,9 +44,6 @@ contract AppManager is Ownable{
     event UpdatedApp(
         uint indexed app_id
     );
-
-    
-    
     
     constructor(){
 
@@ -67,7 +64,7 @@ contract AppManager is Ownable{
     }
 
     // Getters:
-    function getAppBatch(uint start, uint len, bool owned) view external validIndex(start, len) returns(AppInfoLibrary.AppInfo[] memory){
+    function getAppBatch(uint start, uint len) view external validIndex(start, len) returns(AppInfoLibrary.AppInfo[] memory){
         uint apps_length = apps.length();
         uint requested_apps = (len < apps_length? len: apps_length);
         AppInfoLibrary.AppInfo[] memory batch = new AppInfoLibrary.AppInfo[](requested_apps);
@@ -76,7 +73,6 @@ contract AppManager is Ownable{
         for (uint i = 0; i < requested_apps; i++){
             uint app_id = (start + i) % apps_length;
             address app_address = apps.get(app_id);
-            // bool owned = User(user_contract).isAppOwned(app_address);
             batch[i] = App(app_address).getAppInfo();
         }
         return batch;
@@ -111,7 +107,6 @@ contract AppManager is Ownable{
             _fileSha256
         );
         apps.set(apps_num, address(new_app));
-        // User(users[msg.sender]).createNewApp(address(new_app));
         emit AppCreated(
             apps_num, 
             payable(msg.sender),
@@ -135,17 +130,15 @@ contract AppManager is Ownable{
 
         App app = App(apps.get(_app_id));
 
+        if (_magnetLink.isNotEmpty() || _fileSha256.isNotEmpty()){
+            require(_magnetLink.isNotEmpty() && _fileSha256.isNotEmpty(), 'Must provide both magnet link and file sha256');
+            app.updateAppVersion(_fileSha256, _magnetLink);
+        }
         if (_name.isNotEmpty()){
             app.updateAppName(_name);
         }
-
         if (_description.isNotEmpty()){
             app.updateAppDescription(_description);
-        }
-        if (_magnetLink.isNotEmpty() || _fileSha256.isNotEmpty()){
-            // require(_magnetLink.isNotEmpty() && _fileSha256.isNotEmpty(), StringUtils.append(_magnetLink.getVariableMessage("magnet link"), _fileSha256.getVariableMessage("file sha256")));
-            require(_magnetLink.isNotEmpty() && _fileSha256.isNotEmpty(), 'Must provide both magnet link and file sha256');
-            app.updateAppVersion(_fileSha256, _magnetLink);
         }
         if (_imgUrl.isNotEmpty()){
             app.updateAppImgUrl(_imgUrl);

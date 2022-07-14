@@ -225,18 +225,18 @@
     "absolutePath": "project:/contracts/Utils/Events.sol",
     "exportedSymbols": {
       "AppInfoLibrary": [
-        5001
+        4629
       ],
       "Events": [
-        5067
+        4695
       ]
     },
-    "id": 5068,
+    "id": 4696,
     "license": "UNLICENSED",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 5021,
+        "id": 4649,
         "literals": [
           "solidity",
           "^",
@@ -249,20 +249,20 @@
       {
         "absolutePath": "project:/contracts/Utils/AppInfoLibrary.sol",
         "file": "./AppInfoLibrary.sol",
-        "id": 5023,
+        "id": 4651,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 5068,
-        "sourceUnit": 5002,
+        "scope": 4696,
+        "sourceUnit": 4630,
         "src": "67:52:17",
         "symbolAliases": [
           {
             "foreign": {
-              "id": 5022,
+              "id": 4650,
               "name": "AppInfoLibrary",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 5001,
+              "referencedDeclaration": 4629,
               "src": "75:14:17",
               "typeDescriptions": {}
             },
@@ -278,9 +278,9 @@
         "contractDependencies": [],
         "contractKind": "library",
         "fullyImplemented": true,
-        "id": 5067,
+        "id": 4695,
         "linearizedBaseContracts": [
-          5067
+          4695
         ],
         "name": "Events",
         "nameLocation": "131:6:17",
@@ -289,23 +289,23 @@
           {
             "anonymous": false,
             "eventSelector": "263d398af3bd0e797da25e9dc29a23286e999826d13a16fca996d1ddd1eb5281",
-            "id": 5029,
+            "id": 4657,
             "name": "UserCreated",
             "nameLocation": "434:11:17",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 5028,
+              "id": 4656,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5025,
+                  "id": 4653,
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "user_address",
                   "nameLocation": "480:12:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5029,
+                  "scope": 4657,
                   "src": "456:36:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -314,7 +314,7 @@
                     "typeString": "address payable"
                   },
                   "typeName": {
-                    "id": 5024,
+                    "id": 4652,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "456:15:17",
@@ -328,13 +328,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 5027,
+                  "id": 4655,
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "user_contract",
                   "nameLocation": "519:13:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5029,
+                  "scope": 4657,
                   "src": "503:29:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -343,7 +343,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 5026,
+                    "id": 4654,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "503:7:17",
@@ -363,23 +363,23 @@
           {
             "anonymous": false,
             "eventSelector": "ba9cb3f403a15fc11cbc07546f998c36867f843fa32a222ee76a41a9e6af7d07",
-            "id": 5035,
+            "id": 4663,
             "name": "UserPurchasedApp",
             "nameLocation": "554:16:17",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 5034,
+              "id": 4662,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5031,
+                  "id": 4659,
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "buyer",
                   "nameLocation": "605:5:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5035,
+                  "scope": 4663,
                   "src": "581:29:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -388,7 +388,7 @@
                     "typeString": "address payable"
                   },
                   "typeName": {
-                    "id": 5030,
+                    "id": 4658,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "581:15:17",
@@ -402,13 +402,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 5033,
+                  "id": 4661,
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "app_id",
                   "nameLocation": "637:6:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5035,
+                  "scope": 4663,
                   "src": "621:22:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -417,7 +417,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 5032,
+                    "id": 4660,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "621:7:17",
@@ -437,23 +437,23 @@
           {
             "anonymous": false,
             "eventSelector": "dbfbe829d6449d03fc3acd2bc77aa5269815630cd3ba0b38cd4f33d68240ece0",
-            "id": 5047,
+            "id": 4675,
             "name": "UpdatedContent",
             "nameLocation": "665:14:17",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 5046,
+              "id": 4674,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5037,
+                  "id": 4665,
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "app_id",
                   "nameLocation": "703:6:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5047,
+                  "scope": 4675,
                   "src": "690:19:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -462,7 +462,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5036,
+                    "id": 4664,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "690:4:17",
@@ -475,13 +475,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 5039,
+                  "id": 4667,
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "content_type",
                   "nameLocation": "735:12:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5047,
+                  "scope": 4675,
                   "src": "720:27:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -490,7 +490,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 5038,
+                    "id": 4666,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "720:6:17",
@@ -503,13 +503,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 5041,
+                  "id": 4669,
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "new_content",
                   "nameLocation": "773:11:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5047,
+                  "scope": 4675,
                   "src": "758:26:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -518,7 +518,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 5040,
+                    "id": 4668,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "758:6:17",
@@ -531,13 +531,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 5043,
+                  "id": 4671,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "previous_content",
                   "nameLocation": "802:16:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5047,
+                  "scope": 4675,
                   "src": "795:23:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -546,7 +546,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 5042,
+                    "id": 4670,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "795:6:17",
@@ -559,13 +559,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 5045,
+                  "id": 4673,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "sender",
                   "nameLocation": "837:6:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5047,
+                  "scope": 4675,
                   "src": "829:14:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -574,7 +574,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 5044,
+                    "id": 4672,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "829:7:17",
@@ -594,23 +594,23 @@
           {
             "anonymous": false,
             "eventSelector": "4686fd5d77ea9a1984201e56edd878f506e82fdb6401d0bf70543d172ef37a73",
-            "id": 5057,
+            "id": 4685,
             "name": "AppRated",
             "nameLocation": "865:8:17",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 5056,
+              "id": 4684,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5049,
+                  "id": 4677,
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "app_id",
                   "nameLocation": "897:6:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5057,
+                  "scope": 4685,
                   "src": "884:19:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -619,7 +619,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5048,
+                    "id": 4676,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "884:4:17",
@@ -632,13 +632,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 5051,
+                  "id": 4679,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "rating_int",
                   "nameLocation": "919:10:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5057,
+                  "scope": 4685,
                   "src": "914:15:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -647,7 +647,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5050,
+                    "id": 4678,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "914:4:17",
@@ -660,13 +660,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 5053,
+                  "id": 4681,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "rating_modulu",
                   "nameLocation": "945:13:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5057,
+                  "scope": 4685,
                   "src": "940:18:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -675,7 +675,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5052,
+                    "id": 4680,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "940:4:17",
@@ -688,13 +688,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 5055,
+                  "id": 4683,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "num_ratings",
                   "nameLocation": "974:11:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5057,
+                  "scope": 4685,
                   "src": "969:16:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -703,7 +703,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5054,
+                    "id": 4682,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "969:4:17",
@@ -722,23 +722,23 @@
           {
             "anonymous": false,
             "eventSelector": "f3814c1d792326703a86a099c4d66da2daf90ff42781dabace6b0ecb4510cca3",
-            "id": 5061,
+            "id": 4689,
             "name": "UpdatedApp",
             "nameLocation": "1007:10:17",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 5060,
+              "id": 4688,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5059,
+                  "id": 4687,
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "app_id",
                   "nameLocation": "1041:6:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5061,
+                  "scope": 4689,
                   "src": "1028:19:17",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -747,7 +747,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 5058,
+                    "id": 4686,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "1028:4:17",
@@ -766,44 +766,44 @@
           {
             "anonymous": false,
             "eventSelector": "880adda80bdd505c401a67c01386656400caa9a82751dc3f480dd3f79c7cd786",
-            "id": 5066,
+            "id": 4694,
             "name": "AppInfo",
             "nameLocation": "1069:7:17",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 5065,
+              "id": 4693,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 5064,
+                  "id": 4692,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 5066,
+                  "scope": 4694,
                   "src": "1087:22:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_AppInfo_$4995_memory_ptr",
+                    "typeIdentifier": "t_struct$_AppInfo_$4623_memory_ptr",
                     "typeString": "struct AppInfoLibrary.AppInfo"
                   },
                   "typeName": {
-                    "id": 5063,
+                    "id": 4691,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 5062,
+                      "id": 4690,
                       "name": "AppInfoLibrary.AppInfo",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 4995,
+                      "referencedDeclaration": 4623,
                       "src": "1087:22:17"
                     },
-                    "referencedDeclaration": 4995,
+                    "referencedDeclaration": 4623,
                     "src": "1087:22:17",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_AppInfo_$4995_storage_ptr",
+                      "typeIdentifier": "t_struct$_AppInfo_$4623_storage_ptr",
                       "typeString": "struct AppInfoLibrary.AppInfo"
                     }
                   },
@@ -815,7 +815,7 @@
             "src": "1063:54:17"
           }
         ],
-        "scope": 5068,
+        "scope": 4696,
         "src": "123:999:17",
         "usedErrors": []
       }
@@ -828,7 +828,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-07-12T12:46:28.788Z",
+  "updatedAt": "2022-07-13T14:30:13.182Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

@@ -15,6 +15,7 @@ contract User is Ownable{
     using Counters for Counters.Counter;
 
     address payable private user_address;
+    string key;
     bool isPublisher;
     address[] private purchasedApps;
     address[] private createdApps;
@@ -22,8 +23,9 @@ contract User is Ownable{
     mapping (address => uint) private appRatings;
     mapping (address => uint) private downloaded_apps;
     Counters.Counter appsRated;
-    constructor(address new_user_address){
+    constructor(address new_user_address, string memory _key){
         user_address = payable(new_user_address);
+        key = _key;
         isPublisher = false;
         appsRated.reset();
     }
@@ -95,6 +97,4 @@ contract User is Ownable{
         purchasedApps.push(app_address);
         ownedApps[app_address] = true;
     }
-
-
 }
