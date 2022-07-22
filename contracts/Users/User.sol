@@ -5,6 +5,7 @@ import {Constants} from '../Utils/Constants.sol';
 import {StringUtils} from '../Utils/StringUtils.sol';
 import {AddressUtils, AddressPayableUtils} from '../Utils/AddressUtils.sol';
 import {AppInfoLibrary} from '../Utils/AppInfoLibrary.sol';
+import {AddressArrayUtils} from '../Utils/ArrayUtils.sol';
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -13,6 +14,7 @@ import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 contract User is Ownable{
     using AddressUtils for address;
     using Counters for Counters.Counter;
+    using AddressArrayUtils for address[];
 
     address payable private user_address;
     string key;
@@ -37,8 +39,12 @@ contract User is Ownable{
     }
 
     //Getters
-    function isAppOwned(address app_address) external view  onlyOwner returns(bool){
-        return ownedApps[app_address];
+    function isAppOwned(address _app_address) external view  onlyOwner returns(bool){
+        return ownedApps[_app_address];
+    }
+
+    function isCreator(address _app_address) external view onlyOwner returns(bool){
+        return createdApps.contains(_app_address);
     }
         
     function getRatingForApp(address app) view public onlyOwner returns(uint){
@@ -69,9 +75,9 @@ contract User is Ownable{
         uint len = appsRated.current();
         AppInfoLibrary.AppInfo[] memory rated_apps_info = new AppInfoLibrary.AppInfo[](len);
         for (uint i = 0; i < len; i++){
-            address app_address = purchasedApps[i];
-            App _app = App(app_address);
-            if (appRatings[app_address] > 0){
+            address _app_address = purchasedApps[i];
+            App _app = App(_app_address);
+            if (appRatings[_app_address] > 0){
                 rated_apps_info[i] = _app.getAppInfo(true, getRatingForApp(purchasedApps[i]));
             }
         }
@@ -93,8 +99,8 @@ contract User is Ownable{
         appRatings[app] = app_rating;
     }
 
-    function markAppAsPurchased(address app_address) public onlyOwner{
-        purchasedApps.push(app_address);
-        ownedApps[app_address] = true;
+    function markAppAsPurchased(address _app_address) public onlyOwner{
+        purchasedApps.push(_app_address);
+        ownedApps[_app_address] = true;
     }
 }

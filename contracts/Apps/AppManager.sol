@@ -64,6 +64,17 @@ contract AppManager is Ownable{
     }
 
     // Getters:
+    function getAppCreator(uint _app_id) public view appExists(_app_id) returns (address){
+        return App(apps.get(_app_id)).creator();
+    }
+
+    function getAppAddress(uint _app_id) view external 
+    onlyOwner
+    appExists(_app_id)
+    returns(address){
+        return apps.get(_app_id);
+    }
+
     function getAppBatch(uint start, uint len) view external validIndex(start, len) returns(AppInfoLibrary.AppInfo[] memory){
         uint apps_length = apps.length();
         uint requested_apps = (len < apps_length? len: apps_length);
@@ -92,7 +103,9 @@ contract AppManager is Ownable{
         uint _price,
         string memory _category,
         string memory _fileSha256
-    ) public{
+        )
+        public
+        onlyOwner{
         uint apps_num = apps.length();
         App new_app = new App(
             apps_num, 

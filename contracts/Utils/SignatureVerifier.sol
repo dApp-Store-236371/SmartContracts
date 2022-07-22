@@ -5,10 +5,20 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Verify is Ownable{
 
-    function verifySignature (bytes32 message, bytes memory sig) external view returns(bool){
-        address signer = recoverSigner(message, sig);
+    function verifySignature (string memory message, string calldata sig) external view returns(bool){
+        bytes32 message_bytes32 = bytesToBytes32(bytes(message), 0);
+        address signer = recoverSigner(message_bytes32, bytes(sig));
         require(signer == msg.sender, "sender is not signer");
         return true;
+    }
+
+    function bytesToBytes32(bytes memory b, uint offset) private pure returns (bytes32) {
+        bytes32 out;
+
+        for (uint i = 0; i < 32; i++) {
+            out |= bytes32(b[offset + i] & 0xFF) >> (i * 8);
+        }
+        return out;
     }
 
     function recoverSigner(bytes32 message, bytes memory sig) private pure returns (address){

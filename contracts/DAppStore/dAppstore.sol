@@ -229,25 +229,6 @@
 //         emit Events.AppRated(_app_id, rating_int, rating_modulu, num_ratings);
 //     }
 
-//     // function changeBuckets(App app, uint from, uint to) pure private returns(bool){
-//     //     // require(true, 'not implements change_buckets');
-//     //     return false;
-//     // }
 
-//     // function createXApps(uint num_apps) external{
-//     //     uint num_existing_apps = apps.length();
-//     //     for (uint i = num_existing_apps; i < num_existing_apps + num_apps; i++){
-//     //         string memory  idx = i.toString();
-//     //         createNewApp(
-//     //             idx.prepend('GO GO APP #'),
-//     //             idx.prepend('GO GO DESCRIPTION #'),
-//     //             Constants.DEFAULT_APP_MAGNET_LINK,
-//     //             Constants.DEFAULT_APP_IMAGE,
-//     //             idx,
-//     //             i + 1,
-//     //             idx
-//     //         );
-//     //     }
-//     // }
    
 // }

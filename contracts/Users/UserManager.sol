@@ -9,6 +9,7 @@ import {AddressUtils, AddressPayableUtils} from '../Utils/AddressUtils.sol';
 import {AppInfoLibrary} from '../Utils/AppInfoLibrary.sol';
 
 
+
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
@@ -71,11 +72,25 @@ contract UserManager is Ownable{
         return rated_apps_info;
     }
 
-    function getUserRating(address _appAddrress) external view 
+    function getUserRating(address _app_address) external view 
     onlyOwner
     validateUserExists(msg.sender)
     returns (uint _rating){
-        return User(users[msg.sender]).getRatingForApp(_appAddrress);
+        return User(users[msg.sender]).getRatingForApp(_app_address);
+    }
+
+    function isUserAppOwner(address _app_address) external view 
+    validateUserExists(msg.sender)
+    returns(bool){
+        User user = User(getUser(msg.sender));
+        return user.isAppOwned(_app_address);
+    }
+
+    function isUserAppCreator(address _app_address) external view
+    validateUserExists(msg.sender)
+    returns(bool){
+        User user = User(getUser(msg.sender));
+        return user.isCreator(_app_address);
     }
 
     // Create and modify users:

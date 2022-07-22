@@ -10,7 +10,7 @@ const User = artifacts.require("User");
 const dAppstore = artifacts.require("dAppstore");
 const AppManager = artifacts.require("./Apps/AppManager");
 const UserManager = artifacts.require("./Users/UserManager");
-
+const AddressArrayUtils = artifacts.require("AddressArrayUtils");
 
 module.exports = function (deployer) {
   deployer.deploy(Migrations);
@@ -20,11 +20,13 @@ module.exports = function (deployer) {
   deployer.deploy(AddressUtils);
   deployer.deploy(AddressPayableUtils);
   deployer.deploy(AppInfoLibrary);
+  deployer.deploy(AddressArrayUtils);
   deployer.link(Constants, [App, User,AppManager, UserManager, dAppstore]);
   deployer.link(Events, [App, User,AppManager, UserManager, dAppstore]);
   deployer.link(StringUtils, [App, User,AppManager, UserManager, dAppstore]);
   deployer.link(AddressUtils, [App, User,AppManager, UserManager, dAppstore]);
   deployer.link(AddressPayableUtils, [App, User,AppManager, UserManager, dAppstore]);
+  deployer.link(AddressArrayUtils, [App, User,AppManager, UserManager, dAppstore]);
   deployer.link(AppInfoLibrary, [App, User,AppManager, UserManager, dAppstore]);
   deployer.deploy(AppManager);
   deployer.deploy(UserManager);

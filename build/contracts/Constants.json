@@ -7,23 +7,23 @@
   "immutableReferences": {},
   "generatedSources": [],
   "deployedGeneratedSources": [],
-  "sourceMap": "67:890:16:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
-  "deployedSourceMap": "67:890:16:-:0;;;;;;;;",
+  "sourceMap": "67:890:18:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "67:890:18:-:0;;;;;;;;",
   "source": "//SPDX-License-Identifier: UNLICENSED\r\npragma solidity ^0.8.15;\r\n\r\nlibrary Constants {\r\n    string constant DEFAULT_EMPTY = '';\r\n    uint constant UNRATED = 0;\r\n    string constant DEFAULT_APP_IMAGE = 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F20%2F0e%2Ff8%2F200ef82b3182ff75bf0b2de5496e61cf.jpg&f=1&nofb=1';\r\n    string constant DEFAULT_APP_MAGNET_LINK = 'magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent';\r\n    uint constant RATING_THRESHHOLD = 0;\r\n}",
   "sourcePath": "C:\\Users\\User\\Documents\\GitHub\\Backend\\SmartContracts\\contracts\\Utils\\Constants.sol",
   "ast": {
     "absolutePath": "project:/contracts/Utils/Constants.sol",
     "exportedSymbols": {
       "Constants": [
-        4647
+        5013
       ]
     },
-    "id": 4648,
+    "id": 5014,
     "license": "UNLICENSED",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 4631,
+        "id": 4997,
         "literals": [
           "solidity",
           "^",
@@ -31,7 +31,7 @@
           ".15"
         ],
         "nodeType": "PragmaDirective",
-        "src": "39:24:16"
+        "src": "39:24:18"
       },
       {
         "abstract": false,
@@ -40,23 +40,23 @@
         "contractDependencies": [],
         "contractKind": "library",
         "fullyImplemented": true,
-        "id": 4647,
+        "id": 5013,
         "linearizedBaseContracts": [
-          4647
+          5013
         ],
         "name": "Constants",
-        "nameLocation": "75:9:16",
+        "nameLocation": "75:9:18",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": true,
-            "id": 4634,
+            "id": 5000,
             "mutability": "constant",
             "name": "DEFAULT_EMPTY",
-            "nameLocation": "108:13:16",
+            "nameLocation": "108:13:18",
             "nodeType": "VariableDeclaration",
-            "scope": 4647,
-            "src": "92:34:16",
+            "scope": 5013,
+            "src": "92:34:18",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -64,10 +64,10 @@
               "typeString": "string"
             },
             "typeName": {
-              "id": 4632,
+              "id": 4998,
               "name": "string",
               "nodeType": "ElementaryTypeName",
-              "src": "92:6:16",
+              "src": "92:6:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_string_storage_ptr",
                 "typeString": "string"
@@ -75,14 +75,14 @@
             },
             "value": {
               "hexValue": "",
-              "id": 4633,
+              "id": 4999,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
               "kind": "string",
               "lValueRequested": false,
               "nodeType": "Literal",
-              "src": "124:2:16",
+              "src": "124:2:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_stringliteral_c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
                 "typeString": "literal_string \"\""
@@ -93,13 +93,13 @@
           },
           {
             "constant": true,
-            "id": 4637,
+            "id": 5003,
             "mutability": "constant",
             "name": "UNRATED",
-            "nameLocation": "147:7:16",
+            "nameLocation": "147:7:18",
             "nodeType": "VariableDeclaration",
-            "scope": 4647,
-            "src": "133:25:16",
+            "scope": 5013,
+            "src": "133:25:18",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -107,10 +107,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 4635,
+              "id": 5001,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
-              "src": "133:4:16",
+              "src": "133:4:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -118,14 +118,14 @@
             },
             "value": {
               "hexValue": "30",
-              "id": 4636,
+              "id": 5002,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
               "kind": "number",
               "lValueRequested": false,
               "nodeType": "Literal",
-              "src": "157:1:16",
+              "src": "157:1:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_rational_0_by_1",
                 "typeString": "int_const 0"
@@ -136,13 +136,13 @@
           },
           {
             "constant": true,
-            "id": 4640,
+            "id": 5006,
             "mutability": "constant",
             "name": "DEFAULT_APP_IMAGE",
-            "nameLocation": "181:17:16",
+            "nameLocation": "181:17:18",
             "nodeType": "VariableDeclaration",
-            "scope": 4647,
-            "src": "165:187:16",
+            "scope": 5013,
+            "src": "165:187:18",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -150,10 +150,10 @@
               "typeString": "string"
             },
             "typeName": {
-              "id": 4638,
+              "id": 5004,
               "name": "string",
               "nodeType": "ElementaryTypeName",
-              "src": "165:6:16",
+              "src": "165:6:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_string_storage_ptr",
                 "typeString": "string"
@@ -161,14 +161,14 @@
             },
             "value": {
               "hexValue": "68747470733a2f2f65787465726e616c2d636f6e74656e742e6475636b6475636b676f2e636f6d2f69752f3f753d6874747073253341253246253246692e70696e696d672e636f6d2532466f726967696e616c7325324632302532463065253246663825324632303065663832623331383266663735626630623264653534393665363163662e6a706726663d31266e6f66623d31",
-              "id": 4639,
+              "id": 5005,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
               "kind": "string",
               "lValueRequested": false,
               "nodeType": "Literal",
-              "src": "201:151:16",
+              "src": "201:151:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_stringliteral_ddc88163facf55c338519e9695c87d07a6836b5933b3b31a1c4d3dbcd567824e",
                 "typeString": "literal_string \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F20%2F0e%2Ff8%2F200ef82b3182ff75bf0b2de5496e61cf.jpg&f=1&nofb=1\""
@@ -179,13 +179,13 @@
           },
           {
             "constant": true,
-            "id": 4643,
+            "id": 5009,
             "mutability": "constant",
             "name": "DEFAULT_APP_MAGNET_LINK",
-            "nameLocation": "375:23:16",
+            "nameLocation": "375:23:18",
             "nodeType": "VariableDeclaration",
-            "scope": 4647,
-            "src": "359:552:16",
+            "scope": 5013,
+            "src": "359:552:18",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -193,10 +193,10 @@
               "typeString": "string"
             },
             "typeName": {
-              "id": 4641,
+              "id": 5007,
               "name": "string",
               "nodeType": "ElementaryTypeName",
-              "src": "359:6:16",
+              "src": "359:6:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_string_storage_ptr",
                 "typeString": "string"
@@ -204,14 +204,14 @@
             },
             "value": {
               "hexValue": "6d61676e65743a3f78743d75726e3a627469683a3038616461356137613631383361616531653039643833316466363734386435363630393561313026646e3d53696e74656c2674723d7564702533412532462532466578706c6f6469652e6f7267253341363936392674723d756470253341253246253246747261636b65722e636f707065727375726665722e746b253341363936392674723d756470253341253246253246747261636b65722e656d706972652d6a732e7573253341313333372674723d756470253341253246253246747261636b65722e6c656563686572732d70617261646973652e6f7267253341363936392674723d756470253341253246253246747261636b65722e6f70656e747261636b722e6f7267253341313333372674723d777373253341253246253246747261636b65722e62746f7272656e742e78797a2674723d777373253341253246253246747261636b65722e66617374636173742e6e7a2674723d777373253341253246253246747261636b65722e6f70656e776562746f7272656e742e636f6d2677733d6874747073253341253246253246776562746f7272656e742e696f253246746f7272656e74732532462678733d6874747073253341253246253246776562746f7272656e742e696f253246746f7272656e747325324673696e74656c2e746f7272656e74",
-              "id": 4642,
+              "id": 5008,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
               "kind": "string",
               "lValueRequested": false,
               "nodeType": "Literal",
-              "src": "401:510:16",
+              "src": "401:510:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_stringliteral_8863b835fe75511937ff7808e957d245ad768ed99d9161d81a178a117f988f3c",
                 "typeString": "literal_string \"magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent\""
@@ -222,13 +222,13 @@
           },
           {
             "constant": true,
-            "id": 4646,
+            "id": 5012,
             "mutability": "constant",
             "name": "RATING_THRESHHOLD",
-            "nameLocation": "932:17:16",
+            "nameLocation": "932:17:18",
             "nodeType": "VariableDeclaration",
-            "scope": 4647,
-            "src": "918:35:16",
+            "scope": 5013,
+            "src": "918:35:18",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -236,10 +236,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 4644,
+              "id": 5010,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
-              "src": "918:4:16",
+              "src": "918:4:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -247,14 +247,14 @@
             },
             "value": {
               "hexValue": "30",
-              "id": 4645,
+              "id": 5011,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
               "kind": "number",
               "lValueRequested": false,
               "nodeType": "Literal",
-              "src": "952:1:16",
+              "src": "952:1:18",
               "typeDescriptions": {
                 "typeIdentifier": "t_rational_0_by_1",
                 "typeString": "int_const 0"
@@ -264,12 +264,12 @@
             "visibility": "internal"
           }
         ],
-        "scope": 4648,
-        "src": "67:890:16",
+        "scope": 5014,
+        "src": "67:890:18",
         "usedErrors": []
       }
     ],
-    "src": "39:918:16"
+    "src": "39:918:18"
   },
   "compiler": {
     "name": "solc",
@@ -277,7 +277,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-07-13T14:30:13.179Z",
+  "updatedAt": "2022-07-21T13:42:59.437Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
