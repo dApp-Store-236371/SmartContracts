@@ -55,9 +55,10 @@ contract dAppstore {
         _;
     }
 
-    modifier validIndex(uint _index, uint _length){
+        modifier validIndex(uint _index, uint _length){
         require(_index >= 0, 'Invalid index');
         require(_length > 0, 'Invalid length');
+        require(_index < apps.length(), 'Invalid index');
         _;
     }
 

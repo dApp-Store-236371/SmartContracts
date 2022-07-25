@@ -74,7 +74,7 @@ contract('App contract', (accounts) => {
       // console.log(new_rating, i, user_rating);
     }
 
-    appInfo = await app.getAppInfo();
+    appInfo = await app.getAppInfo(true, 0);
     
     appRating = calcRating(parseInt(appInfo.ratingInt), parseInt(appInfo.ratingModulu), parseInt(appInfo.numRatings));
     //calculate average calue of array user_rating

@@ -12550,7 +12550,7 @@
         2801
       ],
       "Constants": [
-        4290
+        4299
       ],
       "Context": [
         429
@@ -12559,7 +12559,7 @@
         503
       ],
       "Events": [
-        4350
+        4359
       ],
       "Ownable": [
         112
@@ -12568,7 +12568,7 @@
         1041
       ],
       "StringUtils": [
-        4425
+        4434
       ],
       "Strings": [
         729
@@ -12596,7 +12596,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 3430,
-        "sourceUnit": 4489,
+        "sourceUnit": 4498,
         "src": "67:69:10",
         "symbolAliases": [
           {
@@ -12605,7 +12605,7 @@
               "name": "Constants",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 4290,
+              "referencedDeclaration": 4299,
               "src": "75:9:10",
               "typeDescriptions": {}
             },
@@ -12617,7 +12617,7 @@
               "name": "Events",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 4350,
+              "referencedDeclaration": 4359,
               "src": "86:6:10",
               "typeDescriptions": {}
             },
@@ -12629,7 +12629,7 @@
               "name": "StringUtils",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 4425,
+              "referencedDeclaration": 4434,
               "src": "94:11:10",
               "typeDescriptions": {}
             },
@@ -12748,7 +12748,7 @@
               "id": 2874,
               "name": "StringUtils",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 4425,
+              "referencedDeclaration": 4434,
               "src": "557:11:10"
             },
             "nodeType": "UsingForDirective",
@@ -13589,7 +13589,7 @@
                       "lValueRequested": false,
                       "memberName": "isEmpty",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 4366,
+                      "referencedDeclaration": 4375,
                       "src": "1890:15:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_delegatecall_pure$_t_string_memory_ptr_$returns$_t_bool_$bound_to$_t_string_memory_ptr_$",
@@ -13646,10 +13646,10 @@
                               "name": "Constants",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 4290,
+                              "referencedDeclaration": 4299,
                               "src": "1928:9:10",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_Constants_$4290_$",
+                                "typeIdentifier": "t_type$_t_contract$_Constants_$4299_$",
                                 "typeString": "type(library Constants)"
                               }
                             },
@@ -13660,7 +13660,7 @@
                             "lValueRequested": false,
                             "memberName": "DEFAULT_APP_IMAGE",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 4283,
+                            "referencedDeclaration": 4292,
                             "src": "1928:27:10",
                             "typeDescriptions": {
                               "typeIdentifier": "t_string_memory_ptr",
@@ -13750,10 +13750,10 @@
                         "name": "Constants",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 4290,
+                        "referencedDeclaration": 4299,
                         "src": "2007:9:10",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Constants_$4290_$",
+                          "typeIdentifier": "t_type$_t_contract$_Constants_$4299_$",
                           "typeString": "type(library Constants)"
                         }
                       },
@@ -13764,7 +13764,7 @@
                       "lValueRequested": false,
                       "memberName": "UNRATED",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 4280,
+                      "referencedDeclaration": 4289,
                       "src": "2007:17:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -13808,10 +13808,10 @@
                         "name": "Constants",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 4290,
+                        "referencedDeclaration": 4299,
                         "src": "2047:9:10",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Constants_$4290_$",
+                          "typeIdentifier": "t_type$_t_contract$_Constants_$4299_$",
                           "typeString": "type(library Constants)"
                         }
                       },
@@ -13822,7 +13822,7 @@
                       "lValueRequested": false,
                       "memberName": "UNRATED",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 4280,
+                      "referencedDeclaration": 4289,
                       "src": "2047:17:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -15192,7 +15192,7 @@
                             "lValueRequested": false,
                             "memberName": "isEmpty",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 4366,
+                            "referencedDeclaration": 4375,
                             "src": "2677:15:10",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_delegatecall_pure$_t_string_memory_ptr_$returns$_t_bool_$bound_to$_t_string_memory_ptr_$",
@@ -16873,7 +16873,7 @@
                         "lValueRequested": false,
                         "memberName": "isEmpty",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 4366,
+                        "referencedDeclaration": 4375,
                         "src": "4457:13:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_delegatecall_pure$_t_string_memory_ptr_$returns$_t_bool_$bound_to$_t_string_memory_ptr_$",
@@ -16998,7 +16998,7 @@
                         "lValueRequested": false,
                         "memberName": "isEmpty",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 4366,
+                        "referencedDeclaration": 4375,
                         "src": "4535:20:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_delegatecall_pure$_t_string_memory_ptr_$returns$_t_bool_$bound_to$_t_string_memory_ptr_$",
@@ -17133,7 +17133,7 @@
                           "lValueRequested": false,
                           "memberName": "isEmpty",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 4366,
+                          "referencedDeclaration": 4375,
                           "src": "4634:19:10",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_delegatecall_pure$_t_string_memory_ptr_$returns$_t_bool_$bound_to$_t_string_memory_ptr_$",
@@ -17195,7 +17195,7 @@
                           "lValueRequested": false,
                           "memberName": "isEmpty",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 4366,
+                          "referencedDeclaration": 4375,
                           "src": "4660:19:10",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_delegatecall_pure$_t_string_memory_ptr_$returns$_t_bool_$bound_to$_t_string_memory_ptr_$",
@@ -17379,7 +17379,7 @@
                         "lValueRequested": false,
                         "memberName": "isEmpty",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 4366,
+                        "referencedDeclaration": 4375,
                         "src": "4800:15:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_delegatecall_pure$_t_string_memory_ptr_$returns$_t_bool_$bound_to$_t_string_memory_ptr_$",
@@ -19250,7 +19250,7 @@
     }
   },
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-07-25T16:19:05.575Z",
+  "updatedAt": "2022-07-25T17:48:13.902Z",
   "devdoc": {
     "kind": "dev",
     "methods": {

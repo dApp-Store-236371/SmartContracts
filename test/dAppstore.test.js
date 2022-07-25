@@ -130,7 +130,7 @@ contract('dAppStore', (accounts) => {
         for (i = 0; i < apps_num; i++) {
             assert.isTrue(expectAppInfo(appBatch[i], i));
         }
-        const app_count = await this.DAppStore.getAppCount();
+        const app_count = await dAppStore.getAppCount().then(res => res.toNumber());
         await expect(app_count).to.equal(x_apps);
     });
 
@@ -172,10 +172,6 @@ contract('dAppStore', (accounts) => {
     it('AppBatch - Fail to get app that doesn\'t exist', async () => {
         const apps_count = await dAppStore.getAppCount().then(res => res.toNumber());
         await dAppStore.getAppBatch(apps_count, 1).catch(err => {
-            console.log('err -->', err);
-            console.log('err -->', err);
-            console.log('err -->', err);
-            console.log('err -->', err);
         })
     });
 
@@ -329,7 +325,7 @@ contract('dAppStore', (accounts) => {
     });
 
     it('rateApp - Users rates app they don\'t own', async () => {
-        const user = accoutns[5];
+        const user = accounts[5];
         const app_id = 0;
         const rating = Math.floor(Math.random() * 5);
         const unrated_rated_app = await dAppStore.getAppBatch(app_id, 1);
@@ -341,22 +337,16 @@ contract('dAppStore', (accounts) => {
         }
         );
 
-        // try{
-        //     ;
-        // }
-        // catch(err){
-        //     console.log('err -->', err.msg);
-        // }
   });
 
     it('rateApp - Users rates app they own', async () => {
         const user = accounts[0];
         const app_id = 0;
         const rating = Math.floor(Math.random() * 5);
-        const unrated_rated_app = await dAppStore.getAppBatch(app_id, 1);
+        const unrated_rated_app = await dAppStore.getAppBatch(app_id, 1).then(res => res[0]);
         expect(unrated_rated_app[0].rating).to.equal(0);
         await dAppStore.rateApp(app_id, rating, {from: user});
-        const rated_app = await dAppStore.getAppBatch(app_id, 1);
+        const rated_app = await dAppStore.getAppBatch(app_id, 1).then(res => res[0]);
         expect(rated_app[0].rating).to.equal(rating);
     });
 
@@ -388,9 +378,6 @@ contract('dAppStore', (accounts) => {
         }
     });
 
-    it('Users get their ratings', async () => {
-        assert.fail();
-    });
     
 
 });
