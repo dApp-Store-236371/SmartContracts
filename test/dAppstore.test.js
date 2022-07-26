@@ -7,6 +7,7 @@ const {
 const sha3 = require('js-sha3').keccak_256;
 const keccak256 = require('keccak256')
 var chai = require("chai");
+const { catchRevert } = require('./exceptions');
 const expect = chai.expect;
 const assert = chai.assert;
 
@@ -85,6 +86,16 @@ contract('dAppStore', (accounts) => {
         fileSha,
         { from: user_address }
         );}
+    }
+
+    const calcRating = (app) => {
+        if (app.ratingNum === '0') {
+            return 0;
+        }
+        const num = parseInt(app.numRatings);
+        const int = parseInt(app.ratingInt);
+        const modulu = parseInt(app.ratingModulu);
+        return int / num + modulu;
     }
 
     //Test case
@@ -178,7 +189,7 @@ contract('dAppStore', (accounts) => {
     it('getPublishedAppsInfo - Should show all apps created by accounts[0]', async () => {
         const user_address = accounts[0];
         const apps = await dAppStore.getPublishedAppsInfo({from: user_address});
-        expect(apps.length).to.equal(user_uploaded_apps.length);
+        expect(apps.length).to.equal(Object.keys(user_uploaded_apps).length);
         const findAppByIdInArray = (id, appArray) => {
             for (let i = 0; i < appArray.length; i++) {
                 if (appArray[i].id === id) {
@@ -247,7 +258,7 @@ contract('dAppStore', (accounts) => {
         const new_price = app.price + 1;
         const new_category = "new category";
         const new_fileSha = "new fileSha";
-        const new_app = {id: app.id, name: new_name, description: new_description, link: new_link, img: new_img, company: new_company, price: new_price, category: new_category, fileSha: new_fileSha};
+        const new_app = {id: app.id, name: new_name, description: new_description, magnetLink: new_link, imgUrl: new_img, company: new_company, price: new_price, category: new_category, fileSha: new_fileSha};
         await dAppStore.updateApp(app_id, 
             new_name, 
             new_description, 
@@ -273,24 +284,24 @@ contract('dAppStore', (accounts) => {
         const app = await dAppStore.getAppBatch(app_id, 1).then(res => res[0]);
         const fileSha = "new fileSha";
         const magnetLink = "magnet link";
-        await dAppStore.updateApp(app_id,
+        catchRevert(await dAppStore.updateApp(app_id,
             '',
             '',
             magnetLink,
             '',
             0,
-            '', {from: accounts[0]});
+            '', {from: accounts[0]}));
         // truffleAssert.eventNotEmitted(result, eventType[, filter][, message])
         const updatedMagnetLink = await dAppStore.getAppBatch(app_id, 1).then(res => res[0]);
         assert.isTrue(compareApps(app, updatedMagnetLink), "app is not updated");
 
-        await dAppStore.updateApp(app_id,
+        catchRevert(await dAppStore.updateApp(app_id,
             '',
             '',
             '',
             '',
             0,
-            fileSha, {from: accounts[0]});
+            fileSha, {from: accounts[0]}));
         // truffleAssert.eventNotEmitted(result, eventType[, filter][, message])
         const updatedFileSha = await dAppStore.getAppBatch(app_id, 1).then(res => res[0]);
         assert.isTrue(compareApps(app, updatedFileSha), "app is not updated");
@@ -328,8 +339,8 @@ contract('dAppStore', (accounts) => {
         const user = accounts[5];
         const app_id = 0;
         const rating = Math.floor(Math.random() * 5);
-        const unrated_rated_app = await dAppStore.getAppBatch(app_id, 1);
-        expect(unrated_rated_app[0].rating).to.equal(0);
+        const unrated_rated_app = await dAppStore.getAppBatch(app_id, 1).then(res => res[0]);
+        expect(parseInt(unrated_rated_app.userRating)).to.equal(0);
 
 
         await dAppStore.rateApp(app_id, rating, {from: user}).catch(err => {
@@ -344,10 +355,10 @@ contract('dAppStore', (accounts) => {
         const app_id = 0;
         const rating = Math.floor(Math.random() * 5);
         const unrated_rated_app = await dAppStore.getAppBatch(app_id, 1).then(res => res[0]);
-        expect(unrated_rated_app[0].rating).to.equal(0);
+        expect(parseInt(unrated_rated_app.userRating)).to.equal(0);
         await dAppStore.rateApp(app_id, rating, {from: user});
         const rated_app = await dAppStore.getAppBatch(app_id, 1).then(res => res[0]);
-        expect(rated_app[0].rating).to.equal(rating);
+        expect(parseInt(rated_app.userRating)).to.equal(rating);
     });
 
     it('rateApp - Users rates apps they own', async () => {
@@ -373,8 +384,9 @@ contract('dAppStore', (accounts) => {
         }
         for(var app_id = 0; app_id < x_apps; app_id++){
             const avg_rating = rating_sums[app_id] / rating_counts[app_id];
-            const app = await dAppStore.getAppBatch(app_id, 1);
-            expect(app[0].rating).to.equal(avg_rating);
+            const app = await dAppStore.getAppBatch(app_id, 1).then(res => res[0]);
+            const app_rating = calc
+            expect(calcRating(app)).to.equal(avg_rating);
         }
     });
 
