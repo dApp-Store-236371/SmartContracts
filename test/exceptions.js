@@ -1,4 +1,5 @@
 const PREFIX = "Returned error: VM Exception while processing transaction: ";
+const ERRORR_PREFIX = 'Error: ' + PREFIX
 
 async function tryCatch(promise, message) {
     try {
@@ -7,7 +8,7 @@ async function tryCatch(promise, message) {
     }
     catch (error) {
         assert(error, "Expected an error but did not get one");
-        assert(error.message.startsWith(PREFIX + message), "Expected an error starting with '" + PREFIX + message + "' but got '" + error.message + "' instead");
+        assert(error.message.startsWith(PREFIX + message) || error.message.startsWith(ERRORR_PREFIX + message), "Expected an error starting with '" + PREFIX + message + "' but got '" + error.message + "' instead");
     }
 };
 

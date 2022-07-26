@@ -116,6 +116,7 @@ contract App is Ownable {
     function updateAppMagnetLink(string calldata new_magnetLink) private validateString(new_magnetLink){
         magnetLink = new_magnetLink;
     }
+
     function updateAppVersion(string memory new_sha) private validateString(new_sha) {
         fileSha256.push(new_sha);
     }
@@ -147,9 +148,10 @@ contract App is Ownable {
         if (!_description.isEmpty()){
             updateAppDescription(_description);
         }
-        if (!_magnetLink.isEmpty() && !_fileSha256.isEmpty()){
+        if (!_magnetLink.isEmpty() || !_fileSha256.isEmpty()){
+            require(!_magnetLink.isEmpty() && !_fileSha256.isEmpty(), 'Must provide both magnet link and file sha256');
+            updateAppFileSha(_fileSha256);
             updateAppMagnetLink(_magnetLink);
-            updateAppVersion(_fileSha256);
         }
         if (!_imgUrl.isEmpty()){
             updateAppImgUrl(_imgUrl);

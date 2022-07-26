@@ -55,7 +55,7 @@ contract dAppstore {
         _;
     }
 
-        modifier validIndex(uint _index, uint _length){
+    modifier validIndex(uint _index, uint _length){
         require(_index >= 0, 'Invalid index');
         require(_length > 0, 'Invalid length');
         require(_index < apps.length(), 'Invalid index');
@@ -213,7 +213,9 @@ contract dAppstore {
         if (users[msg.sender].isAddressZero()){
             return 0;
         }
-        return User(users[msg.sender]).getRatingForApp(apps.get(_app_id));
+        User user = User(users[msg.sender]);
+        address _app_address = apps.get(_app_id);
+        return user.isAppOwned(_app_address)? user.getRatingForApp(_app_address): 0;
 
     }
 
